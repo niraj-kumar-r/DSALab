@@ -10,7 +10,8 @@ private:
     float weight;
 
 public:
-    entry_t(int value, int weight);
+    entry_t();
+    entry_t(int value, float weight);
     int getValue();
     float getWeight();
     void setValue(int value);
@@ -27,7 +28,7 @@ private:
 public:
     heap_t();
     void insert(entry_t entry);
-    entry_t remove();
+    entry_t remove(int index);
     int getParent(int index);
     int getLeftChild(int index);
     int getRightChild(int index);

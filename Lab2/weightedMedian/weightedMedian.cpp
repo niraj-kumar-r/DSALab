@@ -55,6 +55,28 @@ void heap_t::insert(entry_t entry)
     }
 }
 
+entry_t heap_t::getEntry(int index)
+{
+    if (index >= sizeArr)
+    {
+        throw invalid_argument("Index out of bounds");
+    }
+    else
+    {
+        return arr[index];
+    }
+}
+
+int heap_t::getSize()
+{
+    return sizeArr;
+}
+
+int heap_t::getWeightTotal()
+{
+    return weightTotal;
+}
+
 entry_t heap_t::remove(int index)
 {
     if (index >= sizeArr)
@@ -65,6 +87,7 @@ entry_t heap_t::remove(int index)
     {
         entry_t temp = arr[index];
         arr[index] = arr[sizeArr - 1]; // replace the element to be removed with the last element
+        max_heapify_upwards(index);    // max_heapify_upwards the tree
         sizeArr--;
         weightTotal -= temp.getWeight();
         return temp;
@@ -109,23 +132,79 @@ int heap_t::getRightChild(int index)
     }
 }
 
-void heap_t::heapify(int index)
+void heap_t::max_heapify_upwards(int index)
+{
+    int parent = getParent(index);
+    if (parent == -1)
+    {
+        return;
+    }
+    int maxEntry = max(arr[index].getValue(), arr[parent].getValue());
+    if (maxEntry != arr[parent].getValue())
+    {
+        swap(arr[index], arr[parent]);
+        max_heapify_upwards(parent);
+    }
+}
+
+void heap_t::max_heapify_downwards(int index)
 {
     int left = getLeftChild(index);
     int right = getRightChild(index);
-    int parent = index;
-
-    int maxEntry = max(arr[parent].getValue(), arr[left].getValue(), arr[right].getValue());
-
-    if (maxEntry != arr[parent].getValue() && maxEntry == arr[left].getValue())
+    int maxEntry = arr[index].getValue();
+    int maxIndex = index;
+    if (left != -1 && arr[left].getValue() > maxEntry)
     {
-        swap(arr[parent], arr[left]);
-        heapify(left);
+        maxEntry = arr[left].getValue();
+        maxIndex = left;
     }
-    else if (maxEntry != arr[parent].getValue() && maxEntry == arr[right].getValue())
+    if (right != -1 && arr[right].getValue() > maxEntry)
     {
-        swap(arr[parent], arr[right]);
-        heapify(right);
+        maxEntry = arr[right].getValue();
+        maxIndex = right;
+    }
+    if (maxIndex != index)
+    {
+        swap(arr[index], arr[maxIndex]);
+        max_heapify_downwards(maxIndex);
+    }
+}
+
+void heap_t::min_heapify_downwards(int index)
+{
+    int left = getLeftChild(index);
+    int right = getRightChild(index);
+    int minEntry = arr[index].getValue();
+    int minIndex = index;
+    if (left != -1 && arr[left].getValue() < minEntry)
+    {
+        minEntry = arr[left].getValue();
+        minIndex = left;
+    }
+    if (right != -1 && arr[right].getValue() < minEntry)
+    {
+        minEntry = arr[right].getValue();
+        minIndex = right;
+    }
+    if (minIndex != index)
+    {
+        swap(arr[index], arr[minIndex]);
+        min_heapify_downwards(minIndex);
+    }
+}
+
+void heap_t::min_heapify_upwards(int index)
+{
+    int parent = getParent(index);
+    if (parent == -1)
+    {
+        return;
+    }
+    int minEntry = min(arr[index].getValue(), arr[parent].getValue());
+    if (minEntry != arr[parent].getValue())
+    {
+        swap(arr[index], arr[parent]);
+        min_heapify_upwards(parent);
     }
 }
 
@@ -133,7 +212,7 @@ void heap_t::buildHeap()
 {
     for (int i = (sizeArr / 2) - 1; i >= 0; i--)
     {
-        heapify(i);
+        max_heapify_upwards(i);
     }
 }
 
@@ -145,21 +224,21 @@ void heap_t::heapSort()
     {
         swap(arr[0], arr[i]);
         s--;
-        heapify(0);
+        max_heapify_upwards(0);
     }
 }
 
-int heap_t::getWeightedMedian()
-{
-    heapSort();
-    int median = -1;
-    int weight = arr[0].getWeight();
-    int i = 0;
-    while (weight < weightTotal / 2)
-    {
-        weight += arr[i + 1].getWeight();
-        median = arr[i].getValue();
-        i++;
-    }
-    return median;
-}
+// int heap_t::getWeightedMedian()
+// {
+//     heapSort();
+//     int medianIndex = 0;
+//     int weight = 0;
+//     int i = 0;
+//     while (weight < weightTotal / 2)
+//     {
+//         weight += arr[i].getWeight();
+//         medianIndex = i;
+//         i++;
+//     }
+//     return arr[medianIndex].getValue();
+// }

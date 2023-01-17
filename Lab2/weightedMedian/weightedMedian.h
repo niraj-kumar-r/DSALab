@@ -28,14 +28,20 @@ private:
 public:
     heap_t();
     void insert(entry_t entry);
+    entry_t getEntry(int index);
+    int getSize();
+    int getWeightTotal();
     entry_t remove(int index);
     int getParent(int index);
     int getLeftChild(int index);
     int getRightChild(int index);
-    void heapify(int index);
+    void max_heapify_upwards(int index);
+    void max_heapify_downwards(int index);
+    void min_heapify_upwards(int index);
+    void min_heapify_downwards(int index);
     void buildHeap();
     void heapSort();
-    int getWeightedMedian();
+    // int getWeightedMedian();
 };
 
 #endif

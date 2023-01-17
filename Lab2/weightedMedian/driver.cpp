@@ -5,8 +5,10 @@ using namespace std;
 
 int main()
 {
-    heap_t heap;
+    heap_t max_heap;
+    heap_t min_heap;
     entry_t entry;
+    int weightTotalCombined = 0;
     int value;
     float weight;
     int index;
@@ -30,22 +32,52 @@ int main()
             cin >> weight;
             entry.setValue(value);
             entry.setWeight(weight);
-            heap.insert(entry);
+            selectiveInsert(entry, &max_heap, &min_heap);
             break;
         case 2:
             cout << "Enter index: ";
             cin >> index;
-            entry = heap.remove(index);
+            // entry = remove(index);
             cout << "Value: " << entry.getValue() << endl;
             cout << "Weight: " << entry.getWeight() << endl;
             break;
         case 3:
-            cout << "Weighted Median: " << heap.getWeightedMedian() << endl;
+            cout << "Weighted Median: " << max_heap.getEntry(0).getValue() << endl;
             break;
         case 4:
             return 0;
         default:
             cout << "Invalid choice" << endl;
+        }
+    }
+}
+
+void selectiveInsert(entry_t entry, heap_t *max_heap, heap_t *min_heap)
+{
+    int weightTotalCombined = max_heap->getWeightTotal() + min_heap->getWeightTotal();
+
+    if (entry.getValue() > min_heap->getEntry(0).getValue())
+    {
+        min_heap->insert(entry);
+        min_heap->min_heapify_upwards(min_heap->getSize() - 1);
+    }
+    else
+    {
+        if ((max_heap->getWeightTotal() + entry.getWeight()) / (weightTotalCombined + entry.getWeight()) < 0.5)
+        {
+            max_heap->insert(entry);
+            max_heap->max_heapify_upwards(max_heap->getSize() - 1);
+        }
+        else
+        {
+            min_heap->insert(entry);
+            min_heap->min_heapify_upwards(min_heap->getSize() - 1);
+            if ((max_heap->getWeightTotal() + min_heap->getEntry(0).getWeight()) / (weightTotalCombined + min_heap->getEntry(0).getWeight()) < 0.5)
+            {
+                entry = min_heap->remove(0);
+                max_heap->insert(entry);
+                max_heap->max_heapify_upwards(max_heap->getSize() - 1);
+            }
         }
     }
 }

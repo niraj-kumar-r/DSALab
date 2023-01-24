@@ -127,9 +127,8 @@ Node_t *SkipList_t::skipSearch(int value, int final_lvl = 0)
     return current;
 }
 
-void SkipList_t::skipInsert(int value)
+vector<Node_t *> SkipList_t::getPrevNodes(int value)
 {
-    Node_t *new_node = new Node_t(value);
     vector<Node_t *> prev_nodes;
     prev_nodes.resize(getHeight() + 1, neg_inf);
 
@@ -144,8 +143,16 @@ void SkipList_t::skipInsert(int value)
         }
         prev_nodes[current_lvl] = current;
     }
+    return prev_nodes;
+}
 
-    current_lvl = -1;
+void SkipList_t::skipInsert(int value)
+{
+    Node_t *new_node = new Node_t(value);
+    vector<Node_t *> prev_nodes = getPrevNodes(value);
+
+    int current_lvl = -1;
+    Node_t *current = nullptr;
     do
     {
         current_lvl++;
@@ -160,4 +167,19 @@ void SkipList_t::skipInsert(int value)
         current->setNext(new_node, current_lvl);
     } while (rand() % 2 == 0);
     numberOfNodes++;
+}
+
+void SkipList_t::remove(int value)
+{
+    Node_t *current = skipSearch(value);
+    if (current->getValue() != value)
+    {
+        return;
+    }
+    vector<Node_t *> prev_nodes = getPrevNodes(value);
+    for (int i = 0, n = current->getMaxLevel(); i <= n; i++)
+    {
+        prev_nodes[i]->setNext(current->getNext(i), i);
+    }
+    delete current;
 }

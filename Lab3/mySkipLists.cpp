@@ -135,3 +135,20 @@ Node_t *SkipList_t::getPosInf()
 //     }
 //     numberOfNodes++;
 // }
+
+// proof that copilot can be wrong tooo
+
+Node_t *SkipList_t::skipSearch(int value)
+{
+    Node_t *current = getNegInf();
+    int current_lvl = current->getMaxLevel();
+    while (current_lvl >= 0)
+    {
+        current_lvl--;
+        while (current->getNext(current_lvl) < value)
+        {
+            current = current->getNext(current_lvl);
+        }
+    }
+    return current;
+}

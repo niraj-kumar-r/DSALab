@@ -35,8 +35,8 @@ public:
     int getNumberOfNodes();
     Node_t *getNegInf();
     Node_t *getPosInf();
-    void insert(int value);
-    Node_t *search(int value);
+    Node_t *skipSearch(int value);
+    void insert(int value, int level, Node_t *node);
     void remove(int value);
 };
 

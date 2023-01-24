@@ -145,7 +145,7 @@ Node_t *SkipList_t::skipSearch(int value)
     while (current_lvl >= 0)
     {
         current_lvl--;
-        while (current->getNext(current_lvl) < value)
+        while (current->getNext(current_lvl)->getValue() < value)
         {
             current = current->getNext(current_lvl);
         }

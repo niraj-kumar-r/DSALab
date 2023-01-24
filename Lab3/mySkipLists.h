@@ -33,10 +33,12 @@ public:
     SkipList_t();
     int getHeight();
     int getNumberOfNodes();
+    void setHeight(int value);
+    void setNumberOfNodes();
     Node_t *getNegInf();
     Node_t *getPosInf();
-    Node_t *skipSearch(int value);
-    void insert(int value, int level, Node_t *node);
+    Node_t *skipSearch(int value, int final_lvl = 0);
+    void skipInsert(int value);
     void remove(int value);
 };
 

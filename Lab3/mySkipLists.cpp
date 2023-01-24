@@ -53,6 +53,11 @@ void Node_t::setMaxLevel(int max_level)
 // Set next
 void Node_t::setNext(Node_t *next, int level)
 {
+    if (level > this->max_level)
+    {
+        this->setMaxLevel(level);
+        this->next.resize(level, nullptr);
+    }
     this->next[level] = next;
 }
 
@@ -95,51 +100,39 @@ Node_t *SkipList_t::getPosInf()
     return pos_inf;
 }
 
-// Insert
-// void SkipList_t::insert(int value)
-// {
-//     Node_t *current = neg_inf;
-//     Node_t *update[height + 1];
-//     for (int i = height; i >= 0; i--)
-//     {
-//         while (current->getNext(i)->getValue() < value)
-//         {
-//             current = current->getNext(i);
-//         }
-//         update[i] = current;
-//     }
-//     current = current->getNext(0);
-//     if (current->getValue() == value)
-//     {
-//         return;
-//     }
-//     int new_level = 0;
-//     while (rand() % 2 == 1)
-//     {
-//         new_level++;
-//     }
-//     if (new_level > height)
-//     {
-//         for (int i = height + 1; i <= new_level; i++)
-//         {
-//             update[i] = neg_inf;
-//         }
-//         height = new_level;
-//     }
-//     Node_t *new_node = new Node_t(value);
-//     new_node->setMaxLevel(new_level);
-//     for (int i = 0; i <= new_level; i++)
-//     {
-//         new_node->setNext(update[i]->getNext(i), i);
-//         update[i]->setNext(new_node, i);
-//     }
-//     numberOfNodes++;
-// }
-
-// proof that copilot can be wrong tooo
-
-Node_t *SkipList_t::skipSearch(int value)
+// Set height
+void SkipList_t::setHeight(int value)
 {
+    height = value;
+}
+
+// Set number of nodes
+void SkipList_t::setNumberOfNodes()
+{
+    numberOfNodes++;
+}
+
+Node_t *SkipList_t::skipSearch(int value, int final_lvl = 0)
+{
+    Node_t *current = getNegInf();
+    int current_lvl = current->getMaxLevel();
+    while (current_lvl >= final_lvl)
+    {
+        current_lvl--;
+        while (current->getNext(current_lvl)->getValue() < value)
+        {
+            current = current->getNext(current_lvl);
+        }
+    }
+    return current;
+}
+
+void SkipList_t::skipInsert(int value)
+{
+    Node_t *new_node = new Node_t(value);
+    vector<Node_t *> prev_nodes;
+    prev_nodes.resize(getHeight() + 1, neg_inf);
+
     Node_t *current = getNegInf();
     int current_lvl = current->getMaxLevel();
     while (current_lvl >= 0)
@@ -149,6 +142,22 @@ Node_t *SkipList_t::skipSearch(int value)
         {
             current = current->getNext(current_lvl);
         }
+        prev_nodes[current_lvl] = current;
     }
-    return current;
+
+    current_lvl = -1;
+    do
+    {
+        current_lvl++;
+        current = prev_nodes[current_lvl];
+        if (current_lvl >= getHeight())
+        {
+            setHeight(getHeight() + 1);
+            pos_inf->setNext(nullptr, getHeight());
+            neg_inf->setNext(pos_inf, getHeight());
+        }
+        new_node->setNext(current->getNext(current_lvl), current_lvl);
+        current->setNext(new_node, current_lvl);
+    } while (rand() % 2 == 0);
+    numberOfNodes++;
 }

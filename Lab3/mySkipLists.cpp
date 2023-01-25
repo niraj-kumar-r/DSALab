@@ -156,13 +156,14 @@ void SkipList_t::skipInsert(int value)
     do
     {
         current_lvl++;
-        current = prev_nodes[current_lvl];
         if (current_lvl >= getHeight())
         {
             setHeight(getHeight() + 1);
+            prev_nodes.resize(getHeight(), neg_inf);
             pos_inf->setNext(nullptr, getHeight());
             neg_inf->setNext(pos_inf, getHeight());
         }
+        current = prev_nodes[current_lvl];
         new_node->setNext(current->getNext(current_lvl), current_lvl);
         current->setNext(new_node, current_lvl);
     } while (rand() % 2 == 0);

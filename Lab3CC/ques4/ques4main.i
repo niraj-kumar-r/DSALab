@@ -1,3 +1,7 @@
+# 0 "ques4main.c"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "ques4main.c"
 int fun_add(int a, int b);
 int fun_sub(int a, int b);
 int fun_mul(int a, int b);

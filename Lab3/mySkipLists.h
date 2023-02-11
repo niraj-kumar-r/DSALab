@@ -37,7 +37,7 @@ public:
     void setNumberOfNodes();
     Node_t *getNegInf();
     Node_t *getPosInf();
-    vector<Node_t *> getPrevNodes(int value);
+    std::vector<Node_t *> getPrevNodes(int value);
     Node_t *skipSearch(int value, int final_lvl = 0);
     void skipInsert(int value);
     void remove(int value);

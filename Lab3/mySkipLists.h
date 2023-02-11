@@ -7,7 +7,7 @@ class Node_t
 private:
     int value;
     int max_level;
-    vector<Node_t *> next;
+    std::vector<Node_t *> next;
 
 public:
     Node_t();

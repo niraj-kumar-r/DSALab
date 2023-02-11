@@ -1,43 +1,57 @@
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-int findAlphaQuantile(int data[], float weights[], int start, int end, float alpha, float *presentFx);
-int partition(int data[], float weights[], int left, int right, float *presentFx);
+int findAlphaQuantile(int data[], float weights[], int start, int end, float alpha);
+int partition(int data[], float weights[], int left, int right);
 
 int main()
 {
     int A[] = {1, 3, 4, 9, 2, 7};
     float W[] = {0.1, 0.2, 0.1, 0.15, 0.05, 0.4};
     float alpha = 0.3;
-    float presentFx = 0;
-    cout << findAlphaQuantile(A, W, 0, sizeof(A) - 1, alpha, &presentFx) << endl;
+    cout << findAlphaQuantile(A, W, 0, (sizeof(A) / sizeof(int)) - 1, alpha) << endl;
 }
 
-int findAlphaQuantile(int data[], float weights[], int start, int end, float alpha, float *presentFx)
+int findAlphaQuantile(int data[], float weights[], int start, int end, float alpha)
 {
-    if (start == end)
+    if (start > end)
     {
         return data[start];
     }
-    int prevFx = *presentFx;
-    int pivotIndex = partition(data, weights, start, end, presentFx);
-    if (*presentFx == alpha)
+    int pivotIndex = partition(data, weights, start, end);
+    int currentFx = 0;
+    for (int i = 0; i <= pivotIndex; i++)
     {
-        return data[pivotIndex];
+        currentFx += weights[i];
     }
-    else if (*presentFx > alpha)
+    if (currentFx > alpha)
     {
-        *presentFx = prevFx;
-        return findAlphaQuantile(data, weights, start, pivotIndex - 1, alpha, presentFx);
+        return findAlphaQuantile(data, weights, start, pivotIndex - 1, alpha);
     }
     else
     {
-        return findAlphaQuantile(data, weights, pivotIndex + 1, end, alpha, presentFx);
+        int nextMinIndex = pivotIndex + 1;
+        for (int i = pivotIndex + 1; i <= end; i++)
+        {
+            if (data[i] < data[nextMinIndex])
+            {
+                nextMinIndex = i;
+            }
+        }
+        if (currentFx + weights[nextMinIndex] > alpha)
+        {
+            return data[pivotIndex];
+        }
+        else
+        {
+            return findAlphaQuantile(data, weights, pivotIndex + 1, end, alpha);
+        }
     }
 }
 
-int partition(int data[], float weights[], int left, int right, float *presentFx)
+int partition(int data[], float weights[], int left, int right)
 {
     int pivot = data[right];
     int i = left;
@@ -47,12 +61,10 @@ int partition(int data[], float weights[], int left, int right, float *presentFx
         {
             swap(data[i], data[j]);
             swap(weights[i], weights[j]);
-            *presentFx += weights[i];
             i++;
         }
     }
     swap(data[i], data[right]);
     swap(weights[i], weights[right]);
-    *presentFx += weights[i];
     return i;
 }

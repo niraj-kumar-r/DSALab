@@ -57,7 +57,7 @@ void heap_t::insert(entry_t entry)
 
 entry_t heap_t::getEntry(int index)
 {
-    if (index >= sizeArr)
+    if (index >= sizeArr || index < 0)
     {
         throw invalid_argument("Index out of bounds");
     }
@@ -79,7 +79,7 @@ int heap_t::getWeightTotal()
 
 entry_t heap_t::remove(int index)
 {
-    if (index >= sizeArr)
+    if (index >= sizeArr || index < 0)
     {
         throw invalid_argument("Index out of bounds");
     }
@@ -87,8 +87,8 @@ entry_t heap_t::remove(int index)
     {
         entry_t temp = arr[index];
         arr[index] = arr[sizeArr - 1]; // replace the element to be removed with the last element
-        max_heapify_upwards(index);    // max_heapify_upwards the tree
         sizeArr--;
+        max_heapify_upwards(index);    // max_heapify_upwards the tree
         weightTotal -= temp.getWeight();
         return temp;
     }

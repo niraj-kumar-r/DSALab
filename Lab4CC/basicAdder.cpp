@@ -12,6 +12,7 @@ void BasicAdder_t::doHalfAddition(Binary_t a, Binary_t b)
     BasicGates_t basicGates;
     this->sum = basicGates.myXor(a, b);
     this->carry = basicGates.myAnd(a, b);
+    this->delay = basicGates.delay;
 }
 
 void BasicAdder_t::doFullAddition(Binary_t a, Binary_t b, Binary_t c)
@@ -19,6 +20,7 @@ void BasicAdder_t::doFullAddition(Binary_t a, Binary_t b, Binary_t c)
     BasicGates_t basicGates;
     this->sum = basicGates.myXor(basicGates.myXor(a, b), c);
     this->carry = basicGates.myOr(basicGates.myAnd(a, b), basicGates.myAnd(basicGates.myXor(a, b), c));
+    this->delay = basicGates.delay;
 }
 
 void BasicAdder_t::doGenericRippleCarryAddition(Binary_t a, Binary_t b)
@@ -39,11 +41,20 @@ void BasicAdder_t::doGenericRippleCarryAddition(Binary_t a, Binary_t b)
     }
     this->carry = carry;
     this->sum = sum;
+    this->delay = basicGates.delay;
 }
 
 void BasicAdder_t::doGenericCarryLookAheadAddition(Binary_t a, Binary_t b)
 {
     BasicGates_t basicGates;
+    basicGates.myAnd(Binary_t("1b0"), Binary_t("1b0"));
+
+    int andDelay = basicGates.delay;
+    basicGates.delay = 0;
+    basicGates.myOr(Binary_t("1b0"), Binary_t("1b0"));
+    int orDelay = basicGates.delay;
+    basicGates.delay = 0;
+
     Binary_t carry = basicGates.myAnd(a, b);
     Binary_t sum = basicGates.myXor(a, b);
     for (int i = 1; i < a.numBits; i++)
@@ -61,4 +72,6 @@ void BasicAdder_t::doGenericCarryLookAheadAddition(Binary_t a, Binary_t b)
     }
     this->carry = carry;
     this->sum = sum;
+    basicGates.delay = 0;
+    this->delay = andDelay + orDelay + basicGates.delay;
 }

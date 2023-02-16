@@ -40,6 +40,7 @@ Binary_t BasicGates_t::myAnd(Binary_t a, Binary_t b, int gateDelay)
     int value = a.value & b.value;
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -48,6 +49,7 @@ Binary_t BasicGates_t::myOr(Binary_t a, Binary_t b, int gateDelay)
     int value = a.value | b.value;
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -56,6 +58,7 @@ Binary_t BasicGates_t::myNot(Binary_t a, int gateDelay)
     int value = ~a.value;
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -64,6 +67,7 @@ Binary_t BasicGates_t::myNand(Binary_t a, Binary_t b, int gateDelay)
     int value = ~(a.value & b.value);
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -72,6 +76,7 @@ Binary_t BasicGates_t::myNor(Binary_t a, Binary_t b, int gateDelay)
     int value = ~(a.value | b.value);
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -80,6 +85,7 @@ Binary_t BasicGates_t::myXor(Binary_t a, Binary_t b, int gateDelay)
     int value = a.value ^ b.value;
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }
 
@@ -88,5 +94,6 @@ Binary_t BasicGates_t::myXnor(Binary_t a, Binary_t b, int gateDelay)
     int value = ~(a.value ^ b.value);
     int numBits = a.numBits;
     Binary_t result(value, numBits);
+    delay += gateDelay;
     return result;
 }

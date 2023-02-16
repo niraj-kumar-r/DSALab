@@ -19,37 +19,44 @@ int main(int argc, char *argv[])
     if (gate == "and")
     {
         result = basicGates.myAnd(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "or")
     {
         result = basicGates.myOr(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "not")
     {
         result = basicGates.myNot(a);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "nand")
     {
         result = basicGates.myNand(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "nor")
     {
         result = basicGates.myNor(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "xor")
     {
         result = basicGates.myXor(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else if (gate == "xnor")
     {
         result = basicGates.myXnor(a, b);
-        cout << result.getBinaryString() << endl;
+        cout << "output: " << result.getBinaryString() << endl;
+        cout << "delay: " << basicGates.delay << endl;
     }
     else
     {

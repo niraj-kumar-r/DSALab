@@ -19,24 +19,28 @@ int main(int argc, char *argv[])
         basicAdder.doHalfAddition(a, b);
         cout << "sum: " << basicAdder.sum.getBinaryString() << endl;
         cout << "carry: " << basicAdder.carry.getBinaryString() << endl;
+        cout << "delay: " << basicAdder.delay << endl;
     }
     else if (adder == "fullAdder")
     {
         basicAdder.doFullAddition(a, b);
         cout << "sum: " << basicAdder.sum.getBinaryString() << endl;
         cout << "carry: " << basicAdder.carry.getBinaryString() << endl;
+        cout << "delay: " << basicAdder.delay << endl;
     }
     else if (adder == "rippleCarryAdder")
     {
         basicAdder.doGenericRippleCarryAddition(a, b);
         cout << "sum: " << basicAdder.sum.getBinaryString() << endl;
         cout << "carry: " << basicAdder.carry.getBinaryString() << endl;
+        cout << "delay: " << basicAdder.delay << endl;
     }
     else if (adder == "carryLookAheadAdder")
     {
         basicAdder.doGenericCarryLookAheadAddition(a, b);
         cout << "sum: " << basicAdder.sum.getBinaryString() << endl;
         cout << "carry: " << basicAdder.carry.getBinaryString() << endl;
+        cout << "delay: " << basicAdder.delay << endl;
     }
     else
     {

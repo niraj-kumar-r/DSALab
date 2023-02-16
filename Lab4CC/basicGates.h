@@ -28,6 +28,7 @@ class BasicGates_t
 {
 
 public:
+    int delay = 0;
     Binary_t myAnd(Binary_t a, Binary_t b, int gateDelay = AND_DELAY);
     Binary_t myOr(Binary_t a, Binary_t b, int gateDelay = OR_DELAY);
     Binary_t myNot(Binary_t a, int gateDelay = NOT_DELAY);

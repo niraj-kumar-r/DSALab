@@ -25,6 +25,7 @@ void BasicAdder_t::doFullAddition(Binary_t a, Binary_t b, Binary_t c)
 
 void BasicAdder_t::doGenericRippleCarryAddition(Binary_t a, Binary_t b)
 {
+
     BasicGates_t basicGates;
     Binary_t carry = basicGates.myAnd(a, b);
     Binary_t sum = basicGates.myXor(a, b);
@@ -41,7 +42,13 @@ void BasicAdder_t::doGenericRippleCarryAddition(Binary_t a, Binary_t b)
     }
     this->carry = carry;
     this->sum = sum;
-    this->delay = basicGates.delay;
+
+    int fullAdderDelay = 0;
+    BasicAdder_t fullAdder;
+    fullAdder.doFullAddition(Binary_t("1b0"), Binary_t("1b0"), Binary_t("1b0"));
+    fullAdderDelay = fullAdder.delay;
+
+    this->delay = fullAdderDelay * (a.numBits - 1) + 1;
 }
 
 void BasicAdder_t::doGenericCarryLookAheadAddition(Binary_t a, Binary_t b)

@@ -38,7 +38,7 @@ private:
     std::priority_queue<Node_t, std::vector<Node_t>, std::greater<Node_t>> minHeap;
     Node_t *root;
     std::map<char, codemap_t> codeMap;
-    void buildHuffmanTree(std::string text, bool writeFile, string fileName);
+    void buildHuffmanTree(std::string text, bool writeFile = false, std::string fileName = "");
     void buildHuffmanTreeFromTxtFile(std::string inputFileName, bool writeFile = false, std::string outputFileName = "");
     void buildCodeMap(Node_t *root, long code, int top);
 

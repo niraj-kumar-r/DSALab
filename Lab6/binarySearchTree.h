@@ -35,7 +35,7 @@ public:
     int diameter(BinarySearchTreeNode *root);
     int height(BinarySearchTreeNode *root);
     BinarySearchTreeNode *selectKthSmallest(int k, BinarySearchTreeNode *root);
-    BinarySearchTreeNode *buildBinarySearchTreeInorderPostorder(int *inorder[], int *postorder[], int size);
+    BinarySearchTreeNode *buildBinarySearchTreeFromInorderPostorder(int inorder[], int postorder[], int size);
 };
 
 #endif

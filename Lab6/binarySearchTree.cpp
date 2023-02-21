@@ -6,7 +6,7 @@ using namespace std;
 
 BinarySearchTreeNode::BinarySearchTreeNode()
 {
-    value = NULL;
+    value = 0;
     numberOfLeftChildren = 0;
     numberOfRightChildren = 0;
     parent = nullptr;
@@ -307,6 +307,18 @@ int BinarySearchTree::height(BinarySearchTreeNode *root)
     }
 }
 
+int BinarySearchTree::numberOfNodes(BinarySearchTreeNode *root)
+{
+    if (root == nullptr)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + numberOfNodes(root->leftChild) + numberOfNodes(root->rightChild);
+    }
+}
+
 BinarySearchTreeNode *BinarySearchTree::selectKthSmallest(int k, BinarySearchTreeNode *root)
 {
     if (root == nullptr)
@@ -343,6 +355,30 @@ BinarySearchTreeNode *BinarySearchTree::buildBinarySearchTreeFromInorderPostorde
         }
         root->leftChild = buildBinarySearchTreeFromInorderPostorder(inorder, postorder, i);
         root->rightChild = buildBinarySearchTreeFromInorderPostorder(inorder + i + 1, postorder + i, size - i - 1);
+        root->numberOfLeftChildren = i;
+        root->numberOfRightChildren = size - i - 1;
+        return root;
+    }
+}
+
+BinarySearchTreeNode *BinarySearchTree::buildBinarySearchTreeFromInorderPreorder(int inorder[], int preorder[], int size)
+{
+    if (size == 0)
+    {
+        return nullptr;
+    }
+    else
+    {
+        BinarySearchTreeNode *root = new BinarySearchTreeNode(preorder[0]);
+        int i = 0;
+        while (inorder[i] != preorder[0])
+        {
+            i++;
+        }
+        root->leftChild = buildBinarySearchTreeFromInorderPreorder(inorder, preorder + 1, i);
+        root->rightChild = buildBinarySearchTreeFromInorderPreorder(inorder + i + 1, preorder + i + 1, size - i - 1);
+        root->numberOfLeftChildren = i;
+        root->numberOfRightChildren = size - i - 1;
         return root;
     }
 }

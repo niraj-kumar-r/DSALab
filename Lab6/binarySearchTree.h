@@ -1,8 +1,6 @@
 #ifndef BINARY_SEARCH_TREE_H
 #define BINARY_SEARCH_TREE_H
 
-#include <vector>
-
 class BinarySearchTreeNode
 {
 public:
@@ -34,8 +32,10 @@ public:
     bool isBST(BinarySearchTreeNode *root);
     int diameter(BinarySearchTreeNode *root);
     int height(BinarySearchTreeNode *root);
+    int numberOfNodes(BinarySearchTreeNode *root);
     BinarySearchTreeNode *selectKthSmallest(int k, BinarySearchTreeNode *root);
     BinarySearchTreeNode *buildBinarySearchTreeFromInorderPostorder(int inorder[], int postorder[], int size);
+    BinarySearchTreeNode *buildBinarySearchTreeFromInorderPreorder(int inorder[], int preorder[], int size);
 };
 
 #endif

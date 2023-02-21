@@ -38,15 +38,15 @@ int main()
     bst->levelorderTraversal(bst->root);
     cout << endl;
 
-    cout << "deleting 22...";
-    node = bst->deleteNode(22, bst->root);
+    cout << "deleting 22..." << endl;
+    bst->root = bst->deleteNode(22, bst->root);
     bst->inorderTraversal(bst->root);
     cout << endl;
     bst->preorderTraversal(bst->root);
     cout << endl;
 
-    cout << "inserting 22...";
-    node = bst->insertNode(22, bst->root);
+    cout << "inserting 22..." << endl;
+    bst->root = bst->insertNode(22, bst->root);
     bst->inorderTraversal(bst->root);
     cout << endl;
     bst->preorderTraversal(bst->root);

@@ -115,70 +115,44 @@ BinarySearchTreeNode *BinarySearchTree::successor(int value, BinarySearchTreeNod
 
 BinarySearchTreeNode *BinarySearchTree::deleteNode(int value, BinarySearchTreeNode *root)
 {
-    BinarySearchTreeNode *node = findNode(value, root);
-    if (node == nullptr)
+    if (root == nullptr)
     {
         return root;
     }
-    else if (node->leftChild == nullptr && node->rightChild == nullptr)
+    if (value < root->value)
     {
-        if (node->parent == nullptr)
-        {
-            root = nullptr;
-        }
-        else if (node->parent->leftChild == node)
-        {
-            node->parent->leftChild = nullptr;
-        }
-        else
-        {
-            node->parent->rightChild = nullptr;
-        }
-        delete node;
-        return root;
+        root->leftChild = deleteNode(value, root->leftChild);
     }
-    else if (node->leftChild == nullptr)
+    else if (value > root->value)
     {
-        if (node->parent == nullptr)
-        {
-            root = node->rightChild;
-        }
-        else if (node->parent->leftChild == node)
-        {
-            node->parent->leftChild = node->rightChild;
-        }
-        else
-        {
-            node->parent->rightChild = node->rightChild;
-        }
-        node->rightChild->parent = node->parent;
-        delete node;
-        return root;
-    }
-    else if (node->rightChild == nullptr)
-    {
-        if (node->parent == nullptr)
-        {
-            root = node->leftChild;
-        }
-        else if (node->parent->leftChild == node)
-        {
-            node->parent->leftChild = node->leftChild;
-        }
-        else
-        {
-            node->parent->rightChild = node->leftChild;
-        }
-        node->leftChild->parent = node->parent;
-        delete node;
-        return root;
+        root->rightChild = deleteNode(value, root->rightChild);
     }
     else
     {
-        BinarySearchTreeNode *temp = successor(value, root);
-        node->value = temp->value;
-        return deleteNode(temp->value, root);
+        if (root->leftChild == nullptr && root->rightChild == nullptr)
+        {
+            return nullptr;
+        }
+        else if (root->leftChild == nullptr)
+        {
+            BinarySearchTreeNode *temp = root->rightChild;
+            delete root;
+            return temp;
+        }
+        else if (root->rightChild == nullptr)
+        {
+            BinarySearchTreeNode *temp = root->leftChild;
+            delete root;
+            return temp;
+        }
+        else
+        {
+            BinarySearchTreeNode *temp = successor(value, root);
+            root->value = temp->value;
+            root->rightChild = deleteNode(temp->value, root->rightChild);
+        }
     }
+    return root;
 }
 
 BinarySearchTreeNode *BinarySearchTree::insertNode(int value, BinarySearchTreeNode *root)

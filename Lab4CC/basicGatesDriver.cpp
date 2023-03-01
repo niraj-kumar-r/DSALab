@@ -13,7 +13,12 @@ int main(int argc, char *argv[])
     }
     std::string gate = argv[1];
     Binary_t a(argv[2]);
-    Binary_t b(argv[3]);
+    // Binary_t b(argv[3]);
+    Binary_t b("1b0");
+    if (argc == 4)
+    {
+        b = Binary_t(argv[3]);
+    }
     BasicGates_t basicGates;
     Binary_t result;
     if (gate == "and")

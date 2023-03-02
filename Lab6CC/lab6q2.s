@@ -7,7 +7,7 @@
 
 _start:
 
-    ldr r1, =.LC0
+    ldr r1, .L1
     ldr r2, [r1, #0x0]
     ldr r3, [r1, #0x4]
     add r4, r2, r3
@@ -19,3 +19,6 @@ _start:
     add r6, r2, r3
 
 stop: b stop
+
+.L1:
+    .word .LC0

@@ -1,0 +1,12 @@
+Way 1:
+
+"i   i   t   t   i   r   u   p   a   t   i"
+
+In memory, each byte contains only one letter's ASCII code.
+
+Way 2:
+
+"iit   tirupati"
+
+In memory it groups together the letters to keep 4 letters in one byte.
+Also, it follows little endian format.

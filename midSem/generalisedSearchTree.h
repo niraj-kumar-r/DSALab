@@ -22,14 +22,17 @@ public:
     GeneralisedSearchTree(int m);
 
     void insertVal(int num);
-    void removeVal(int num);
+    // void removeVal(int num);
     GeneralisedSearchTreeNode *searchVal(int num);
     void levelOrderTraversal();
 
 private:
     void insertVal(int num, GeneralisedSearchTreeNode *root);
-    void removeVal(int num, GeneralisedSearchTreeNode *root);
+    // void removeVal(int num, GeneralisedSearchTreeNode *root);
     GeneralisedSearchTreeNode *searchVal(int num, GeneralisedSearchTreeNode *root);
+    GeneralisedSearchTreeNode *findNodeForInsert(int num, GeneralisedSearchTreeNode *root);
+    void fixNodeInsertion(GeneralisedSearchTreeNode *root);
+    int getMedian(GeneralisedSearchTreeNode *root);
 };
 
 #endif

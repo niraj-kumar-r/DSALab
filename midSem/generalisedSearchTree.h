@@ -2,9 +2,9 @@
 #define GENRALISED_SEARCH_TREE_H
 
 #include <vector>
-// #include <queue>
 #include <set>
-
+// class vector;
+// class stdset;
 class GeneralisedSearchTreeNode
 {
 public:
@@ -32,7 +32,7 @@ private:
     GeneralisedSearchTreeNode *searchVal(int num, GeneralisedSearchTreeNode *root);
     GeneralisedSearchTreeNode *findNodeForInsert(int num, GeneralisedSearchTreeNode *root);
     void fixNodeInsertion(GeneralisedSearchTreeNode *root);
-    set<int>::iterator getMedian(GeneralisedSearchTreeNode *root);
+    std::set<int>::iterator getMedian(GeneralisedSearchTreeNode *root);
 };
 
 #endif

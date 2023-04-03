@@ -101,6 +101,26 @@ void GeneralisedSearchTree::insertVal(int num, GeneralisedSearchTreeNode *root)
     }
 }
 
+set<int>::iterator GeneralisedSearchTree::getMedian(GeneralisedSearchTreeNode *root)
+{
+    int k = root->keys.size();
+    int median = 0;
+    if (k % 2 == 0)
+    {
+        median = k / 2;
+    }
+    else
+    {
+        median = (k + 1) / 2;
+    }
+    set<int>::iterator it = root->keys.begin();
+    for (int i = 0; i < median; i++)
+    {
+        it++;
+    }
+    return it;
+}
+
 void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
 {
     if (root == nullptr)
@@ -109,9 +129,7 @@ void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
     }
     if (root->keys.size() > mainFactor || root->children.size() > mainFactor - 1)
     {
-        set<int>::iterator mkeyIt = getMedian(root);
-        int mkey = *mkeyIt;
-        // root->keys.erase(mkey);
+        set<int>::iterator mkeyIt = this->getMedian(root);
         if (root->parent == nullptr)
         {
             root->parent = new GeneralisedSearchTreeNode();
@@ -121,10 +139,15 @@ void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
                 TreeRoot = root->parent;
             }
         }
-        root->parent->keys.insert(mkey);
+        root->parent->keys.insert(*mkeyIt);
         vector<GeneralisedSearchTreeNode *>::iterator it = find(root->parent->children.begin(), root->parent->children.end(), root);
         GeneralisedSearchTreeNode *n_child = new GeneralisedSearchTreeNode();
         n_child->parent = root->parent;
+        move(root->keys.begin(), mkeyIt, inserter(n_child->keys, n_child->keys.begin()));
+        root->keys.erase(root->keys.begin(), ++mkeyIt);
+        move(root->children.begin(), root->children.begin() + (root->children.size() / 2), back_inserter(n_child->children));
+        root->children.erase(root->children.begin(), root->children.begin() + (root->children.size() / 2));
+
         // auto r_it = root->keys.begin();
         // int i = 0;
         // while (*r_it < mkey)
@@ -151,29 +174,8 @@ void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
         //     root->children.pop_back();
         // }
         root->parent->children.insert(it, n_child);
-
         fixNodeInsertion(root->parent);
     }
-}
-
-set<int>::iterator GeneralisedSearchTree::getMedian(GeneralisedSearchTreeNode *root)
-{
-    int k = root->keys.size();
-    int median = 0;
-    if (k % 2 == 0)
-    {
-        median = k / 2;
-    }
-    else
-    {
-        median = (k + 1) / 2;
-    }
-    auto it = root->keys.begin();
-    for (int i = 0; i < median; i++)
-    {
-        it++;
-    }
-    return it;
 }
 
 void GeneralisedSearchTree::levelOrderTraversal()

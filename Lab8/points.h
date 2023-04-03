@@ -4,9 +4,9 @@
 class Point
 {
 public:
-    Point(int x, int y);
+    Point(double x, double y);
     Point();
-    int x;
-    int y;
+    double x;
+    double y;
 };
 #endif

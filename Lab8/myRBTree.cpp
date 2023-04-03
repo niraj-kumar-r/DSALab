@@ -288,3 +288,43 @@ void myRBTree::transplant(Node *u, Node *v)
     if (v != nullptr)
         v->parent = u->parent;
 }
+
+Node *myRBTree::minimum(Node *n)
+{
+    while (n->left != nullptr)
+        n = n->left;
+    return n;
+}
+
+Node *myRBTree::maximum(Node *n)
+{
+    while (n->right != nullptr)
+        n = n->right;
+    return n;
+}
+
+Node *myRBTree::successor(Node *n)
+{
+    if (n->right != nullptr)
+        return minimum(n->right);
+    Node *y = n->parent;
+    while (y != nullptr && n == y->right)
+    {
+        n = y;
+        y = y->parent;
+    }
+    return y;
+}
+
+Node *myRBTree::predecessor(Node *n)
+{
+    if (n->left != nullptr)
+        return maximum(n->left);
+    Node *y = n->parent;
+    while (y != nullptr && n == y->left)
+    {
+        n = y;
+        y = y->parent;
+    }
+    return y;
+}

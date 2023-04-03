@@ -32,7 +32,7 @@ private:
     GeneralisedSearchTreeNode *searchVal(int num, GeneralisedSearchTreeNode *root);
     GeneralisedSearchTreeNode *findNodeForInsert(int num, GeneralisedSearchTreeNode *root);
     void fixNodeInsertion(GeneralisedSearchTreeNode *root);
-    int getMedian(GeneralisedSearchTreeNode *root);
+    set<int>::iterator getMedian(GeneralisedSearchTreeNode *root);
 };
 
 #endif

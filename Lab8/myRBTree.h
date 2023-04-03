@@ -28,8 +28,8 @@ class myRBTree
 public:
     Node *root;
     int numNodes;
-    int sumX;
-    int sumY;
+    double sumX;
+    double sumY;
 
     myRBTree();
     void insert(Point p);

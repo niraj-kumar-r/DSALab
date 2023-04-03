@@ -1,10 +1,10 @@
 #ifndef GENERALISED_SEARCH_TREE_H
 #define GENRALISED_SEARCH_TREE_H
 
+#pragma once
 #include <vector>
 #include <set>
-// class vector;
-// class stdset;
+
 class GeneralisedSearchTreeNode
 {
 public:

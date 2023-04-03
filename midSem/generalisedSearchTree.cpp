@@ -1,7 +1,5 @@
 #include <iostream>
 #include "generalisedSearchTree.h"
-#include <vector>
-#include <set>
 #include <algorithm>
 
 using namespace std;
@@ -103,22 +101,7 @@ void GeneralisedSearchTree::insertVal(int num, GeneralisedSearchTreeNode *root)
 
 set<int>::iterator GeneralisedSearchTree::getMedian(GeneralisedSearchTreeNode *root)
 {
-    int k = root->keys.size();
-    int median = 0;
-    if (k % 2 == 0)
-    {
-        median = k / 2;
-    }
-    else
-    {
-        median = (k + 1) / 2;
-    }
-    set<int>::iterator it = root->keys.begin();
-    for (int i = 0; i < median; i++)
-    {
-        it++;
-    }
-    return it;
+    return next(root->keys.begin(), root->keys.size() / 2);
 }
 
 void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)

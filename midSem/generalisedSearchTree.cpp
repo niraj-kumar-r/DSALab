@@ -123,39 +123,18 @@ void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
             }
         }
         root->parent->keys.insert(*mkeyIt);
+
         vector<GeneralisedSearchTreeNode *>::iterator it = find(root->parent->children.begin(), root->parent->children.end(), root);
+
         GeneralisedSearchTreeNode *n_child = new GeneralisedSearchTreeNode();
         n_child->parent = root->parent;
+
         move(root->keys.begin(), mkeyIt, inserter(n_child->keys, n_child->keys.begin()));
         root->keys.erase(root->keys.begin(), ++mkeyIt);
+
         move(root->children.begin(), root->children.begin() + (root->children.size() / 2), back_inserter(n_child->children));
         root->children.erase(root->children.begin(), root->children.begin() + (root->children.size() / 2));
 
-        // auto r_it = root->keys.begin();
-        // int i = 0;
-        // while (*r_it < mkey)
-        // {
-        //     n_child->keys.insert(*r_it);
-        //     r_it++;
-        //     i++;
-        // }
-        // set<int> out;
-        // // set_difference(root->keys.begin(), root->keys.end(), n_child->keys.begin(), n_child->keys.end(), out.begin());
-        // r_it++;
-        // while (r_it != root->keys.end())
-        // {
-        //     out.insert(*r_it);
-        //     r_it++;
-        // }
-        // root->keys = out;
-        // for (int j = 0; j < root->children.size() && j < i; j++)
-        // {
-        //     n_child->children.push_back(root->children[j]);
-        // }
-        // while (i--)
-        // {
-        //     root->children.pop_back();
-        // }
         root->parent->children.insert(it, n_child);
         fixNodeInsertion(root->parent);
     }
@@ -179,7 +158,6 @@ void GeneralisedSearchTree::levelOrderTraversal()
             cout << *it << " ";
             it++;
         }
-        cout << endl;
         for (int i = 0, n = curr->children.size(); i < n; i++)
         {
             q.push_back(curr->children[i]);

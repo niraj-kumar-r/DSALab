@@ -103,6 +103,19 @@ set<int>::iterator GeneralisedSearchTree::getMedian(GeneralisedSearchTreeNode *r
 {
     return next(root->keys.begin(), root->keys.size() / 2);
 }
+// template <typename T>
+// typename set<T>::iterator getMedian(std::set<T> &s)
+// {
+//     auto middle = std::next(s.begin(), std::distance(s.begin(), s.end()) / 2);
+//     if (s.size() % 2 == 0)
+//     { // even number of elements
+//         return std::prev(middle);
+//     }
+//     else
+//     { // odd number of elements
+//         return middle;
+//     }
+// }
 
 void GeneralisedSearchTree::fixNodeInsertion(GeneralisedSearchTreeNode *root)
 {

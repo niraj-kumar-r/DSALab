@@ -33,6 +33,8 @@ private:
     GeneralisedSearchTreeNode *findNodeForInsert(int num, GeneralisedSearchTreeNode *root);
     void fixNodeInsertion(GeneralisedSearchTreeNode *root);
     std::set<int>::iterator getMedian(GeneralisedSearchTreeNode *root);
+    // template <typename T>
+    // typename std::set<T>::iterator getMedian(std::set<T> &s);
 };
 
 #endif

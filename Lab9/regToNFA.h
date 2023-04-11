@@ -7,12 +7,14 @@
 
 class NFAGraphState
 {
-    std::unordered_multimap<std::string, NFAGraphState *> edgeTransitions;
+public:
+    std::unordered_map<std::string, std::unordered_set<NFAGraphState *>> edgeTransitions;
     bool isAccepting;
 };
 
 class NFAGraph
 {
+public:
     std::unordered_set<NFAGraphState *> States;
     std::unordered_set<std::string> alphabet;
     NFAGraphState *startState;
@@ -25,7 +27,7 @@ class NFAGraph
 class regToNFAConvertor
 {
 public:
-    NFAGraph regToNFA(std::string reg);
+    NFAGraph *regToNFA(std::string reg);
 };
 
 #endif

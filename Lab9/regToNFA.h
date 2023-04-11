@@ -8,6 +8,8 @@
 class NFAGraphState
 {
 public:
+    NFAGraphState();
+    NFAGraphState(bool isAccepting);
     std::unordered_map<std::string, std::unordered_set<NFAGraphState *>> edgeTransitions;
     bool isAccepting;
 };
@@ -16,6 +18,7 @@ class NFAGraph
 {
 public:
     std::unordered_set<NFAGraphState *> States;
+    // taking @ as epsilon
     std::unordered_set<std::string> alphabet;
     NFAGraphState *startState;
     std::unordered_set<NFAGraphState *> acceptingStates;
@@ -27,6 +30,10 @@ public:
 class regToNFAConvertor
 {
 public:
+    NFAGraph *mainNFA;
+    NFAGraph *getStar(NFAGraph *nfa);
+    NFAGraph *getConcat(NFAGraph *nfa1, NFAGraph *nfa2);
+    NFAGraph *getUnion(NFAGraph *nfa1, NFAGraph *nfa2);
     NFAGraph *regToNFA(std::string reg);
 };
 

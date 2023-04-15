@@ -11,7 +11,7 @@ main:
         BEQ ENDLOOP
         
         
-        ANDS r3, r1, #1
+        AND r3, r1, #1
         BEQ SHIFT
         
         ADD r2, r2, r0

@@ -1,6 +1,8 @@
 #ifndef MY_AVL_TREE_H
 #define MY_AVL_TREE_H
 
+#include "points.h"
+
 class avlTreeNode_t
 {
 public:

@@ -25,7 +25,23 @@ unordered_set<NFAGraphState *> NFAGraph::transitionFunction(NFAGraphState *curre
 
 unordered_set<NFAGraphState *> NFAGraph::epsilonClosure(NFAGraphState *currentState)
 {
-    return currentState->edgeTransitions["@"];
+    unordered_set<NFAGraphState *> closure = {currentState};
+    stack<NFAGraphState *> stack;
+    stack.push(currentState);
+    while (!stack.empty())
+    {
+        NFAGraphState *state = stack.top();
+        stack.pop();
+        for (NFAGraphState *state2 : state->edgeTransitions["@"])
+        {
+            if (closure.find(state2) == closure.end())
+            {
+                closure.insert(state2);
+                stack.push(state2);
+            }
+        }
+    }
+    return closure;
 }
 
 bool NFAGraph::isValidString(std::string input)
@@ -33,11 +49,15 @@ bool NFAGraph::isValidString(std::string input)
     unordered_set<NFAGraphState *> currentStates = epsilonClosure(startState);
     for (int i = 0; i < input.length(); i++)
     {
-        unordered_set<NFAGraphState *> nextStates;
+        unordered_set<NFAGraphState *> nextStates = {};
         for (NFAGraphState *state : currentStates)
         {
             unordered_set<NFAGraphState *> temp = transitionFunction(state, input.substr(i, 1));
-            nextStates.insert(temp.begin(), temp.end());
+            for (NFAGraphState *state2 : temp)
+            {
+                unordered_set<NFAGraphState *> temp2 = epsilonClosure(state2);
+                nextStates.insert(temp2.begin(), temp2.end());
+            }
         }
         currentStates = nextStates;
     }
@@ -76,6 +96,7 @@ NFAGraph *regToNFAConvertor::getConcat(NFAGraph *nfa1, NFAGraph *nfa2)
     nfa->acceptingStates = nfa2->acceptingStates;
     for (NFAGraphState *state : nfa1->acceptingStates)
     {
+        state->isAccepting = false;
         state->edgeTransitions["@"].insert(nfa2->startState);
     }
     delete nfa1;
@@ -90,10 +111,12 @@ NFAGraph *regToNFAConvertor::getUnion(NFAGraph *nfa1, NFAGraph *nfa2)
     nfa->alphabet.insert(nfa2->alphabet.begin(), nfa2->alphabet.end());
     nfa->States = nfa1->States;
     nfa->States.insert(nfa2->States.begin(), nfa2->States.end());
+
     nfa->startState = new NFAGraphState();
     nfa->States.insert(nfa->startState);
     nfa->startState->edgeTransitions["@"].insert(nfa1->startState);
     nfa->startState->edgeTransitions["@"].insert(nfa2->startState);
+
     NFAGraphState *newState = new NFAGraphState(true);
     nfa->States.insert(newState);
     nfa->acceptingStates.insert(newState);
@@ -119,7 +142,6 @@ NFAGraph *regToNFAConvertor::getStar(NFAGraph *nfa)
     newNFA->States.insert(newNFA->startState);
     newNFA->acceptingStates.insert(newNFA->startState);
     newNFA->startState->edgeTransitions["@"].insert(nfa->startState);
-    // newNFA->startState->edgeTransitions["@"].insert(newNFA->startState);
     NFAGraphState *newState = new NFAGraphState(true);
     newNFA->States.insert(newState);
     newNFA->acceptingStates.insert(newState);

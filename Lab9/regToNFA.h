@@ -31,10 +31,14 @@ class regToNFAConvertor
 {
 public:
     NFAGraph *mainNFA;
+    NFAGraph *getNFAforAlphabet(std::string alphabet);
     NFAGraph *getStar(NFAGraph *nfa);
     NFAGraph *getConcat(NFAGraph *nfa1, NFAGraph *nfa2);
     NFAGraph *getUnion(NFAGraph *nfa1, NFAGraph *nfa2);
     NFAGraph *regToNFA(std::string reg);
+    int get_precedence(char c);
+    bool is_operator(char c);
+    std::string regex_to_prefix(std::string regex);
 };
 
 #endif

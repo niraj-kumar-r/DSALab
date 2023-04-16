@@ -1,6 +1,8 @@
 #include "regToNFA.h"
 #include <iostream>
 #include <stack>
+#include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,6 +49,20 @@ bool NFAGraph::isValidString(std::string input)
         }
     }
     return false;
+}
+
+NFAGraph *regToNFAConvertor::getNFAforAlphabet(string alphabet)
+{
+    NFAGraph *nfa = new NFAGraph();
+    nfa->alphabet.insert(alphabet);
+    NFAGraphState *startState = new NFAGraphState();
+    NFAGraphState *acceptingState = new NFAGraphState(true);
+    startState->edgeTransitions[alphabet].insert(acceptingState);
+    nfa->States.insert(startState);
+    nfa->States.insert(acceptingState);
+    nfa->startState = startState;
+    nfa->acceptingStates.insert(acceptingState);
+    return nfa;
 }
 
 NFAGraph *regToNFAConvertor::getConcat(NFAGraph *nfa1, NFAGraph *nfa2)
@@ -116,10 +132,122 @@ NFAGraph *regToNFAConvertor::getStar(NFAGraph *nfa)
     return newNFA;
 }
 
-// regex can also have brackets
-// for eg. ab+(a.b)*a is a valid regex
-// (a+b)*.a is also a valid regex
 NFAGraph *regToNFAConvertor::regToNFA(string reg)
 {
-    reg = "(" + reg + ")";
+    string prefix = regex_to_prefix(reg);
+    stack<NFAGraph *> nfa_stack;
+    for (int i = prefix.length(); i >= 0; i--)
+    {
+        if (prefix[i] == '*')
+        {
+            NFAGraph *nfa = nfa_stack.top();
+            nfa_stack.pop();
+            nfa_stack.push(getStar(nfa));
+        }
+        else if (prefix[i] == '.')
+        {
+            NFAGraph *nfa1 = nfa_stack.top();
+            nfa_stack.pop();
+            NFAGraph *nfa2 = nfa_stack.top();
+            nfa_stack.pop();
+            nfa_stack.push(getConcat(nfa1, nfa2));
+        }
+        else if (prefix[i] == '+')
+        {
+            NFAGraph *nfa1 = nfa_stack.top();
+            nfa_stack.pop();
+            NFAGraph *nfa2 = nfa_stack.top();
+            nfa_stack.pop();
+            nfa_stack.push(getUnion(nfa1, nfa2));
+        }
+        else
+        {
+            nfa_stack.push(getNFAforAlphabet(string(1, prefix[i])));
+        }
+    }
+    mainNFA = nfa_stack.top();
+    return nfa_stack.top();
+}
+
+int regToNFAConvertor::get_precedence(char c)
+{
+    if (c == '*')
+        return 3;
+    else if (c == '.')
+        return 2;
+    else if (c == '+')
+        return 1;
+    else
+        return 0;
+}
+
+bool regToNFAConvertor::is_operator(char c)
+{
+    if (c == '*' || c == '.' || c == '+' || c == '(' || c == ')')
+        return true;
+    return false;
+}
+
+string regToNFAConvertor::regex_to_prefix(string infix)
+{
+    infix = '(' + infix + ')';
+
+    std::reverse(infix.begin(), infix.end());
+
+    int l = infix.size();
+    stack<char> char_stack;
+    string output;
+
+    for (int i = 0; i < l; i++)
+    {
+
+        // If the scanned character is an
+        // operand, add it to output.
+        if (!is_operator(infix[i]))
+            output += infix[i];
+
+        // If the scanned character is an
+        // ‘(‘, push it to the stack.
+        else if (infix[i] == ')')
+            char_stack.push(')');
+
+        // If the scanned character is an
+        // ‘)’, pop and output from the stack
+        // until an ‘(‘ is encountered.
+        else if (infix[i] == '(')
+        {
+            while (char_stack.top() != ')')
+            {
+                output += char_stack.top();
+                char_stack.pop();
+            }
+
+            // Remove '(' from the stack
+            char_stack.pop();
+        }
+
+        // Operator found
+        else
+        {
+            if (is_operator(char_stack.top()))
+            {
+                while (
+                    get_precedence(infix[i]) < get_precedence(char_stack.top()))
+                {
+                    output += char_stack.top();
+                    char_stack.pop();
+                }
+
+                // Push current Operator on stack
+                char_stack.push(infix[i]);
+            }
+        }
+    }
+    while (!char_stack.empty())
+    {
+        output += char_stack.top();
+        char_stack.pop();
+    }
+    std::reverse(output.begin(), output.end());
+    return output;
 }

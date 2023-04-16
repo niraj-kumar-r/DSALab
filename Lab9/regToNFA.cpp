@@ -1,5 +1,6 @@
 #include "regToNFA.h"
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -61,6 +62,8 @@ NFAGraph *regToNFAConvertor::getConcat(NFAGraph *nfa1, NFAGraph *nfa2)
     {
         state->edgeTransitions["@"].insert(nfa2->startState);
     }
+    delete nfa1;
+    delete nfa2;
     return nfa;
 }
 
@@ -86,7 +89,8 @@ NFAGraph *regToNFAConvertor::getUnion(NFAGraph *nfa1, NFAGraph *nfa2)
     {
         state->edgeTransitions["@"].insert(newState);
     }
-
+    delete nfa1;
+    delete nfa2;
     return nfa;
 }
 
@@ -108,5 +112,14 @@ NFAGraph *regToNFAConvertor::getStar(NFAGraph *nfa)
         state->edgeTransitions["@"].insert(nfa->startState);
         state->edgeTransitions["@"].insert(newState);
     }
+    delete nfa;
     return newNFA;
+}
+
+// regex can also have brackets
+// for eg. ab+(a.b)*a is a valid regex
+// (a+b)*.a is also a valid regex
+NFAGraph *regToNFAConvertor::regToNFA(string reg)
+{
+    reg = "(" + reg + ")";
 }

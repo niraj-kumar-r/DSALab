@@ -10,6 +10,7 @@
 class cluster : public myRBTree
 {
 public:
+    bool isCentroid;
     Point centroid;
 
     cluster();
@@ -22,7 +23,6 @@ class GraphPoint : public Point
 public:
     int cluster;
 
-    GraphPoint();
     GraphPoint(Point p, int cluster);
     GraphPoint(int x, int y, int cluster);
     GraphPoint(int x, int y);

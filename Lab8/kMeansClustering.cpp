@@ -5,19 +5,20 @@ using namespace std;
 
 cluster::cluster()
 {
-    centroid = Point(NULL, NULL);
+    isCentroid = false;
 }
 
 cluster::cluster(Point p)
 {
+    isCentroid = true;
     centroid = p;
 }
 
 void cluster::updateCentroid()
 {
-    if (root == NULL)
+    if (root == nullptr)
     {
-        centroid = Point(NULL, NULL);
+        isCentroid = false;
         return;
     }
     else
@@ -25,11 +26,6 @@ void cluster::updateCentroid()
         centroid = Point(sumX / numNodes, sumY / numNodes);
         return;
     }
-}
-
-GraphPoint::GraphPoint()
-{
-    cluster = NULL;
 }
 
 GraphPoint::GraphPoint(Point p, int cluster)
@@ -50,14 +46,14 @@ GraphPoint::GraphPoint(int x, int y)
 {
     this->x = x;
     this->y = y;
-    this->cluster = NULL;
+    this->cluster = -1;
 }
 
 GraphPoint::GraphPoint(Point p)
 {
     this->x = p.x;
     this->y = p.y;
-    this->cluster = NULL;
+    this->cluster = -1;
 }
 
 my_graph::my_graph(int numClusters)
@@ -87,6 +83,7 @@ void my_graph::assignRandomCentroids()
             {
                 used.insert(randNum);
                 clusters[i] = cluster(graphPoints[randNum]);
+                clusters[i].isCentroid = true;
                 graphPoints[randNum].cluster = i;
                 break;
             }
@@ -118,10 +115,11 @@ void my_graph::doKMeans()
     for (int i = 0; i < numClusters; i++)
     {
         clusters[i].clearTree();
+        clusters[i].isCentroid = false;
     }
     for (auto &p : graphPoints)
     {
-        p.cluster = NULL;
+        p.cluster = -1;
     }
     assignRandomCentroids();
     bool changed = true;
@@ -144,7 +142,7 @@ void my_graph::doKMeans()
             if (graphPoints[i].cluster != minCluster)
             {
                 changed = true;
-                if (graphPoints[i].cluster != NULL)
+                if (graphPoints[i].cluster != -1)
                 {
                     clusters[graphPoints[i].cluster].remove(graphPoints[i]);
                 }
@@ -161,5 +159,6 @@ void my_graph::doKMeans()
     {
         cout << "Cluster " << i << " Centroid: " << clusters[i].centroid.x << ", " << clusters[i].centroid.y << endl;
         clusters[i].print();
+        cout << "\n\n";
     }
 }

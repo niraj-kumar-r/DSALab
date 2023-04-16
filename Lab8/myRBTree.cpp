@@ -1,5 +1,6 @@
 #include "myRBTree.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -90,6 +91,27 @@ void myRBTree::remove(Node *n)
     sumX -= n->p.x;
     sumY -= n->p.y;
     delete n;
+}
+
+void myRBTree::clearTree()
+{
+    vector<Node *> nodes;
+    nodes.push_back(root);
+    while (!nodes.empty())
+    {
+        Node *n = nodes.back();
+        nodes.pop_back();
+        if (n != nullptr)
+        {
+            nodes.push_back(n->left);
+            nodes.push_back(n->right);
+            delete n;
+        }
+    }
+    root = nullptr;
+    numNodes = 0;
+    sumX = 0;
+    sumY = 0;
 }
 
 Node *myRBTree::find(Point p)

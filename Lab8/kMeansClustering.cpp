@@ -73,3 +73,30 @@ void my_graph::setPoints(std::vector<GraphPoint> points)
     numPoints = points.size();
     assignRandomCentroids();
 }
+
+void my_graph::assignRandomCentroids()
+{
+    for (int i = 0; i < numClusters; i++)
+    {
+        clusters[i] = cluster(graphPoints[i]);
+    }
+}
+
+void my_graph::addPoint(GraphPoint p)
+{
+    graphPoints.push_back(p);
+    numPoints++;
+}
+
+void my_graph::removePoint(GraphPoint p)
+{
+    for (int i = 0; i < numPoints; i++)
+    {
+        if (graphPoints[i] == p)
+        {
+            graphPoints.erase(graphPoints.begin() + i);
+            numPoints--;
+            return;
+        }
+    }
+}

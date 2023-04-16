@@ -34,6 +34,7 @@ public:
     myRBTree();
     void insert(Point p);
     void remove(Point p);
+    void clearTree();
     Node *find(Point p);
     void print();
 

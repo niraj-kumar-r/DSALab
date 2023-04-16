@@ -222,20 +222,12 @@ string regToNFAConvertor::regex_to_prefix(string infix)
 
     for (int i = 0; i < l; i++)
     {
-
-        // If the scanned character is an
-        // operand, add it to output.
         if (!is_operator(infix[i]))
             output += infix[i];
 
-        // If the scanned character is an
-        // ‘(‘, push it to the stack.
         else if (infix[i] == ')')
             char_stack.push(')');
 
-        // If the scanned character is an
-        // ‘)’, pop and output from the stack
-        // until an ‘(‘ is encountered.
         else if (infix[i] == '(')
         {
             while (char_stack.top() != ')')
@@ -244,11 +236,9 @@ string regToNFAConvertor::regex_to_prefix(string infix)
                 char_stack.pop();
             }
 
-            // Remove '(' from the stack
             char_stack.pop();
         }
 
-        // Operator found
         else
         {
             if (is_operator(char_stack.top()))
@@ -260,7 +250,6 @@ string regToNFAConvertor::regex_to_prefix(string infix)
                     char_stack.pop();
                 }
 
-                // Push current Operator on stack
                 char_stack.push(infix[i]);
             }
         }

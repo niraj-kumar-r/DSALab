@@ -253,6 +253,7 @@ bool BinarySearchTree::isBST(BinarySearchTreeNode *root)
     }
 }
 
+// returns the number of nodes on the longest path between two leaves in the tree
 int BinarySearchTree::diameter(BinarySearchTreeNode *root)
 {
     if (root == nullptr)

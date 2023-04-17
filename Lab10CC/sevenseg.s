@@ -1,10 +1,3 @@
-/* 
-Accessing seven segment display units
-Basic Idea: the segment mapping with the memory address
-Accessing: via LD and STR instruction
-ON: bit 1, OFF: bit 0
-*/
-
 .equ ADDR_7SEG1TO4, 0xFF200020
 .equ ADDR_7SEG5TO6, 0xFF200030
 
@@ -15,7 +8,7 @@ _start:
   str r1, [r0]     // Write to 7-seg displays
 
   ldr r0, =ADDR_7SEG1TO4
-  ldr r1, =#0b0000000
+  ldr r1, =#0b0000001
   str r1, [r0]
   
   ldr r0, =ADDR_7SEG5TO6

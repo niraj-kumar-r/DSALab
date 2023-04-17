@@ -10,7 +10,9 @@ int main()
 {
     int A[] = {1, 3, 4, 9, 2, 7};
     float W[] = {0.1, 0.2, 0.1, 0.15, 0.05, 0.4};
-    float alpha = 0.3;
+    float alpha = 0;
+    cout << "Enter alpha: ";
+    cin >> alpha;
     cout << findAlphaQuantile(A, W, 0, (sizeof(A) / sizeof(int)) - 1, alpha) << endl;
 }
 
@@ -21,7 +23,7 @@ int findAlphaQuantile(int data[], float weights[], int start, int end, float alp
         return data[start];
     }
     int pivotIndex = partition(data, weights, start, end);
-    int currentFx = 0;
+    float currentFx = 0;
     for (int i = 0; i <= pivotIndex; i++)
     {
         currentFx += weights[i];

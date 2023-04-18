@@ -134,13 +134,13 @@ void min_heapify_downwards(int a, struct node Arr[], int n)
 
 void deleteRootfromMaxHeap(struct node Arr[], int c1)
 {
-    struct node c;
-    c.value = Arr[0].value;
-    c.wt = Arr[0].wt;
+    // struct node c;
+    // c.value = Arr[0].value;
+    // c.wt = Arr[0].wt;
 
     Arr[0].value = Arr[c1 - 1].value;
     Arr[0].wt = Arr[c1 - 1].wt;
-    c1--;
+    // c1--;
     if (Arr[0].value < Arr[left(1) - 1].value || Arr[0].value < Arr[right(1) - 1].value)
     {
         max_heapify_downwards(1, Arr, c1);
@@ -149,13 +149,13 @@ void deleteRootfromMaxHeap(struct node Arr[], int c1)
 
 void deleteRootfromMinHeap(struct node Arr[], int c2)
 {
-    struct node c;
-    c.value = Arr[0].value;
-    c.wt = Arr[0].wt;
+    // struct node c;
+    // c.value = Arr[0].value;
+    // c.wt = Arr[0].wt;
 
     Arr[0].value = Arr[c2 - 1].value;
     Arr[0].wt = Arr[c2 - 1].wt;
-    c2--;
+    // c2--;
     if (Arr[0].value > Arr[left(1) - 1].value || Arr[0].value > Arr[right(1) - 1].value)
     {
         min_heapify_downwards(1, Arr, c2);
@@ -167,13 +167,13 @@ int main()
     struct node H1[100];
     struct node H2[100];
 
-    for (int i = 0; i < 100; i++)
-    {
-        H1[i].value = 0;
-        H1[i].wt = 0;
-        H2[i].value = 0;
-        H2[i].wt = 0;
-    }
+    // for (int i = 0; i < 100; i++)
+    // {
+    //     H1[i].value = 0;
+    //     H1[i].wt = 0;
+    //     H2[i].value = 0;
+    //     H2[i].wt = 0;
+    // }
 
     unsigned int s1 = 0; // sum of weights in H1
     unsigned int s2 = 0; // sum of weights in H2

@@ -74,7 +74,6 @@ int minIndex2(int a, int b, struct node Arr[])
 
 void max_heapify_upwards(int a, struct node Arr[])
 {
-    int n = a;
     if (a == 1)
     {
         return;
@@ -90,7 +89,6 @@ void max_heapify_upwards(int a, struct node Arr[])
 
 void min_heapify_upwards(int a, struct node Arr[])
 {
-    int n = a;
     if (a == 1)
     {
         return;

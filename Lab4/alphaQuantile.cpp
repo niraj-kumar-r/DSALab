@@ -46,6 +46,7 @@ int findAlphaQuantile(int data[], float weights[], int start, int end, float alp
         {
             return data[pivotIndex];
         }
+
         else
         {
             return findAlphaQuantile(data, weights, pivotIndex + 1, end, alpha);

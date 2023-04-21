@@ -25,7 +25,7 @@ class heap_t
 private:
     entry_t arr[HEAP_SIZE];
     int sizeArr;
-    int weightTotal;
+    float weightTotal;
     bool minHeap;
 
 public:
@@ -36,6 +36,7 @@ public:
     int getSize();
     int getWeightTotal();
     entry_t remove(int index);
+    entry_t remove(int value, bool &found);
     int getParent(int index);
     int getLeftChild(int index);
     int getRightChild(int index);

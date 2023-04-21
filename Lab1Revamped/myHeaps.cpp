@@ -109,6 +109,31 @@ entry_t heap_t::remove(int index)
     return entry;
 }
 
+// Removes entry with value
+entry_t heap_t::remove(int value, bool &found)
+{
+    int index = 0;
+    found = false;
+    while (index < sizeArr)
+    {
+        if (arr[index].getValue() == value)
+        {
+            found = true;
+            break;
+        }
+        index++;
+    }
+    if (found)
+    {
+        return remove(index);
+    }
+    else
+    {
+        entry_t entry;
+        return entry;
+    }
+}
+
 // Returns index of parent
 int heap_t::getParent(int index)
 {

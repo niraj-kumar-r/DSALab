@@ -1,0 +1,4 @@
+#ifndef PERFECT_HASHING_H
+#define PERFECT_HASHING_H
+
+#endif

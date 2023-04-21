@@ -16,7 +16,7 @@ HuffmanCoding_t::HuffmanCoding_t()
 }
 
 // Building huffman tree for possiblities a-z and space
-void HuffmanCoding_t::buildHuffmanTree(std::string text, bool writeFile = false, std::string fileName = "")
+void HuffmanCoding_t::buildHuffmanTree(std::string text, bool writeFile, std::string fileName)
 {
     int freq[27] = {0};
     for (int i = 0; i < text.length(); i++)
@@ -69,7 +69,7 @@ void HuffmanCoding_t::buildHuffmanTree(std::string text, bool writeFile = false,
 }
 
 // Building huffman tree from txt file
-void HuffmanCoding_t::buildHuffmanTreeFromTxtFile(std::string inputFileName, bool writeFile = false, std::string outputFileName = "")
+void HuffmanCoding_t::buildHuffmanTreeFromTxtFile(std::string inputFileName, bool writeFile, std::string outputFileName)
 {
     string text;
     ifstream file(inputFileName);

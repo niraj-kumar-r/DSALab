@@ -7,7 +7,7 @@ int main()
 {
     int numEntries = 10;
     int values[] = {1, 2, 3, 4, 5};
-    float weights[] = {0.1, 0.2, 0.3, 0.4, 0.5};
+    float weights[] = {0.1, 4.2, 2.3, 0.4, 5.5};
 
     weightedMedianSolver solver = weightedMedianSolver();
 

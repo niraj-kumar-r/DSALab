@@ -4,6 +4,40 @@
 
 using namespace std;
 
+Node *Node::uncle()
+{
+    if (parent == nullptr || parent->parent == nullptr)
+        return nullptr;
+    if (parent == parent->parent->left)
+        return parent->parent->right;
+    else
+        return parent->parent->left;
+}
+
+Node *Node::sibling()
+{
+    if (parent == nullptr)
+        return nullptr;
+    if (this == parent->left)
+        return parent->right;
+    else
+        return parent->left;
+}
+
+bool Node::hasRedChild()
+{
+    if (left != nullptr && left->isRed)
+        return true;
+    if (right != nullptr && right->isRed)
+        return true;
+    return false;
+}
+
+bool Node::isOnLeft()
+{
+    return this == parent->left;
+}
+
 myRBTree::myRBTree()
 {
     root = nullptr;
@@ -52,45 +86,126 @@ void myRBTree::remove(Point p)
     }
 }
 
+// void myRBTree::remove(Node *n)
+// {
+//     Node *y = n;
+//     Node *x;
+//     bool yOriginalColor = y->isRed;
+//     if (n->left == nullptr)
+//     {
+//         x = n->right;
+//         transplant(n, n->right);
+//     }
+//     else if (n->right == nullptr)
+//     {
+//         x = n->left;
+//         transplant(n, n->left);
+//     }
+//     else
+//     {
+//         y = minimum(n->right);
+//         yOriginalColor = y->isRed;
+//         x = y->right;
+//         if (y->parent == n)
+//             x->parent = y;
+//         else
+//         {
+//             transplant(y, y->right);
+//             y->right = n->right;
+//             y->right->parent = y;
+//         }
+//         transplant(n, y);
+//         y->left = n->left;
+//         y->left->parent = y;
+//         y->isRed = n->isRed;
+//     }
+//     if (!yOriginalColor)
+//         fixRemove(x);
+// numNodes--;
+// sumX -= n->p.x;
+// sumY -= n->p.y;
+//     delete n;
+// }
+
 void myRBTree::remove(Node *n)
 {
-    Node *y = n;
-    Node *x;
-    bool yOriginalColor = y->isRed;
-    if (n->left == nullptr)
+    Node *m = getReplacement(n);
+    bool nmBlack = ((m == nullptr || m->isRed == false) && (n->isRed == false));
+    Node *parent = n->parent;
+
+    if (m == nullptr)
     {
-        x = n->right;
-        transplant(n, n->right);
-    }
-    else if (n->right == nullptr)
-    {
-        x = n->left;
-        transplant(n, n->left);
-    }
-    else
-    {
-        y = minimum(n->right);
-        yOriginalColor = y->isRed;
-        x = y->right;
-        if (y->parent == n)
-            x->parent = y;
+        if (n == root)
+        {
+            root = nullptr;
+        }
         else
         {
-            transplant(y, y->right);
-            y->right = n->right;
-            y->right->parent = y;
+            if (nmBlack)
+            {
+                fixDoubleBlack(n);
+            }
+            else
+            {
+                if (n->sibling() != nullptr)
+                    n->sibling()->isRed = true;
+            }
+
+            if (n->isOnLeft())
+            {
+                parent->left = nullptr;
+            }
+            else
+            {
+                parent->right = nullptr;
+            }
         }
-        transplant(n, y);
-        y->left = n->left;
-        y->left->parent = y;
-        y->isRed = n->isRed;
+        numNodes--;
+        sumX -= n->p.x;
+        sumY -= n->p.y;
+        delete n;
+        return;
     }
-    if (!yOriginalColor)
-        fixRemove(x);
-    numNodes--;
-    sumX -= n->p.x;
-    sumY -= n->p.y;
-    delete n;
+    if (n->left == nullptr || n->right == nullptr)
+    {
+        if (n == root)
+        {
+            n->p = m->p;
+            n->left = n->right = nullptr;
+            numNodes--;
+            sumX -= m->p.x;
+            sumY -= m->p.y;
+            delete m;
+        }
+        else
+        {
+            if (n->isOnLeft())
+            {
+                parent->left = m;
+            }
+            else
+            {
+                parent->right = m;
+            }
+            numNodes--;
+            sumX -= n->p.x;
+            sumY -= n->p.y;
+            delete n;
+            m->parent = parent;
+            if (nmBlack)
+            {
+                fixDoubleBlack(m);
+            }
+            else
+            {
+                m->isRed = false;
+            }
+        }
+        return;
+    }
+
+    swapValues(n, m);
+    remove(m);
 }
 
 void myRBTree::clearTree()
@@ -177,6 +292,20 @@ void myRBTree::rotateRight(Node *n)
     n->parent = y;
 }
 
+void myRBTree::swapColors(Node *n1, Node *n2)
+{
+    bool temp = n1->isRed;
+    n1->isRed = n2->isRed;
+    n2->isRed = temp;
+}
+
+void myRBTree::swapValues(Node *n1, Node *n2)
+{
+    Point temp = n1->p;
+    n1->p = n2->p;
+    n2->p = temp;
+}
+
 void myRBTree::fixInsert(Node *n)
 {
     while (n != root && n->parent->isRed)
@@ -229,74 +358,132 @@ void myRBTree::fixInsert(Node *n)
     root->isRed = false;
 }
 
-void myRBTree::fixRemove(Node *n)
+void myRBTree::fixRedRed(Node *n)
 {
-    while (n != root && !n->isRed)
+    if (n == root)
     {
-        if (n == n->parent->left)
+        n->isRed = false;
+        return;
+    }
+    Node *parent = n->parent, *grandparent = parent->parent, *uncle = n->uncle();
+    if (parent->isRed)
+    {
+        if (uncle != nullptr && uncle->isRed)
         {
-            Node *w = n->parent->right;
-            if (w->isRed)
-            {
-                w->isRed = false;
-                n->parent->isRed = true;
-                rotateLeft(n->parent);
-                w = n->parent->right;
-            }
-            if (!w->left->isRed && !w->right->isRed)
-            {
-                w->isRed = true;
-                n = n->parent;
-            }
-            else
-            {
-                if (!w->right->isRed)
-                {
-                    w->left->isRed = false;
-                    w->isRed = true;
-                    rotateRight(w);
-                    w = n->parent->right;
-                }
-                w->isRed = n->parent->isRed;
-                n->parent->isRed = false;
-                w->right->isRed = false;
-                rotateLeft(n->parent);
-                n = root;
-            }
+            grandparent->isRed = true;
+            parent->isRed = false;
+            uncle->isRed = false;
+            fixRedRed(grandparent);
         }
         else
         {
-            Node *w = n->parent->left;
-            if (w->isRed)
+            if (parent->isOnLeft())
             {
-                w->isRed = false;
-                n->parent->isRed = true;
-                rotateRight(n->parent);
-                w = n->parent->left;
-            }
-            if (!w->right->isRed && !w->left->isRed)
-            {
-                w->isRed = true;
-                n = n->parent;
+                if (n->isOnLeft())
+                {
+                    swapColors(parent, grandparent);
+                }
+                else
+                {
+                    rotateLeft(parent);
+                    swapColors(n, grandparent);
+                }
+                rotateRight(grandparent);
             }
             else
             {
-                if (!w->left->isRed)
+                if (n->isOnLeft())
                 {
-                    w->right->isRed = false;
-                    w->isRed = true;
-                    rotateLeft(w);
-                    w = n->parent->left;
+                    rotateRight(parent);
+                    swapColors(n, grandparent);
                 }
-                w->isRed = n->parent->isRed;
-                n->parent->isRed = false;
-                w->left->isRed = false;
-                rotateRight(n->parent);
-                n = root;
+                else
+                {
+                    swapColors(parent, grandparent);
+                }
+                rotateLeft(grandparent);
             }
         }
     }
-    n->isRed = false;
+}
+
+void myRBTree::fixDoubleBlack(Node *n)
+{
+    if (n == root)
+    {
+        return;
+    }
+    Node *sibling = n->sibling(), *parent = n->parent;
+    if (sibling == nullptr)
+    {
+        fixDoubleBlack(parent);
+    }
+    else
+    {
+        if (sibling->isRed)
+        {
+            parent->isRed = true;
+            sibling->isRed = false;
+            if (sibling->isOnLeft())
+            {
+                rotateRight(parent);
+            }
+            else
+            {
+                rotateLeft(parent);
+            }
+            fixDoubleBlack(n);
+        }
+        else
+        {
+            if (sibling->hasRedChild())
+            {
+                if (sibling->left != nullptr && sibling->left->isRed)
+                {
+                    if (sibling->isOnLeft())
+                    {
+                        sibling->left->isRed = sibling->isRed;
+                        sibling->isRed = parent->isRed;
+                        rotateRight(parent);
+                    }
+                    else
+                    {
+                        sibling->left->isRed = parent->isRed;
+                        rotateRight(sibling);
+                        rotateLeft(parent);
+                    }
+                }
+                else
+                {
+                    if (sibling->isOnLeft())
+                    {
+                        sibling->right->isRed = parent->isRed;
+                        rotateLeft(sibling);
+                        rotateRight(parent);
+                    }
+                    else
+                    {
+                        sibling->right->isRed = sibling->isRed;
+                        sibling->isRed = parent->isRed;
+                        rotateLeft(parent);
+                    }
+                }
+                parent->isRed = false;
+            }
+            else
+            {
+                sibling->isRed = true;
+                if (parent->isRed)
+                {
+                    parent->isRed = false;
+                }
+                else
+                {
+                    fixDoubleBlack(parent);
+                }
+            }
+        }
+    }
 }
 
 void myRBTree::transplant(Node *u, Node *v)
@@ -349,4 +536,16 @@ Node *myRBTree::predecessor(Node *n)
         y = y->parent;
     }
     return y;
+}
+
+Node *myRBTree::getReplacement(Node *n)
+{
+    if (n->left != nullptr && n->right != nullptr)
+        return successor(n);
+    if (n->left == nullptr && n->right == nullptr)
+        return nullptr;
+    if (n->left != nullptr)
+        return n->left;
+    else
+        return n->right;
 }

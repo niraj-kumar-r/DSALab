@@ -35,14 +35,14 @@ GraphPoint::GraphPoint(Point p, int cluster)
     this->cluster = cluster;
 }
 
-GraphPoint::GraphPoint(int x, int y, int cluster)
+GraphPoint::GraphPoint(double x, double y, int cluster)
 {
     this->x = x;
     this->y = y;
     this->cluster = cluster;
 }
 
-GraphPoint::GraphPoint(int x, int y)
+GraphPoint::GraphPoint(double x, double y)
 {
     this->x = x;
     this->y = y;
@@ -85,6 +85,7 @@ void my_graph::assignRandomCentroids()
                 clusters[i] = cluster(graphPoints[randNum]);
                 clusters[i].isCentroid = true;
                 graphPoints[randNum].cluster = i;
+                clusters[i].insert(graphPoints[randNum]);
                 break;
             }
         }

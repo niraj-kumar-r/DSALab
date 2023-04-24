@@ -3,8 +3,9 @@
 
 #include "points.h"
 
-struct Node
+class Node
 {
+public:
     Point p;
     Node *left;
     Node *right;
@@ -18,6 +19,10 @@ struct Node
         parent = nullptr;
         isRed = true;
     }
+    Node *uncle();
+    Node *sibling();
+    bool hasRedChild();
+    bool isOnLeft();
 };
 
 // This is a red-black tree that stores Point objects.
@@ -45,13 +50,18 @@ private:
     void print(Node *n);
     void rotateLeft(Node *n);
     void rotateRight(Node *n);
+    void swapColors(Node *n1, Node *n2);
+    void swapValues(Node *n1, Node *n2);
     void fixInsert(Node *n);
-    void fixRemove(Node *n);
+    // void fixRemove(Node *n);
+    void fixRedRed(Node *n);
+    void fixDoubleBlack(Node *n);
     void transplant(Node *u, Node *v);
     Node *minimum(Node *n);
     Node *maximum(Node *n);
     Node *successor(Node *n);
     Node *predecessor(Node *n);
+    Node *getReplacement(Node *n);
 };
 
 #endif

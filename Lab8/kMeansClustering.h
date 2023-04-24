@@ -24,8 +24,8 @@ public:
     int cluster;
 
     GraphPoint(Point p, int cluster);
-    GraphPoint(int x, int y, int cluster);
-    GraphPoint(int x, int y);
+    GraphPoint(double x, double y, int cluster);
+    GraphPoint(double x, double y);
     GraphPoint(Point p);
 
     double calcDist(GraphPoint p)

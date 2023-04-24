@@ -94,7 +94,7 @@ void printarr(int a[], int n)
 // Driver code
 int main()
 {
-    int a[] = {1 6,3,4,4,6,7,8,9,10,4};
+    int a[] = {4, 9, 4, 4, 1, 9, 4, 4, 9, 4, 4, 1, 4};
     int size = sizeof(a) / sizeof(int);
 
     // Function Call

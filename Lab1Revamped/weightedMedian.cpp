@@ -19,6 +19,7 @@ void weightedMedianSolver::insert(int value, float weight)
     if (max_heap.getSize() == 0)
     {
         max_heap.insert(entry);
+        weightedMedian = value;
         return;
     }
     else if (value < max_heap.getEntry(0).getValue())

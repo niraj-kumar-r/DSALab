@@ -1,86 +1,82 @@
-// C++ program for 3-way quick sort
 #include <bits/stdc++.h>
 using namespace std;
 
-/* This function partitions a[] in three parts
-a) a[l..i] contains all elements smaller than pivot
-b) a[i+1..j-1] contains all occurrences of pivot
-c) a[j..r] contains all elements greater than pivot */
-void partition(int a[], int l, int r, int &i, int &j)
-{
-    i = l - 1, j = r;
-    int p = l - 1, q = r;
-    int v = a[r];
-
-    while (true)
-    {
-        // From left, find the first element greater than
-        // or equal to v. This loop will definitely
-        // terminate as v is last element
-        while (a[++i] < v)
-            ;
-
-        // From right, find the first element smaller than
-        // or equal to v
-        while (v < a[--j])
-            if (j == l)
-                break;
-
-        // If i and j cross, then we are done
-        if (i >= j)
-            break;
-
-        // Swap, so that smaller goes on left greater goes
-        // on right
-        swap(a[i], a[j]);
-
-        // Move all same left occurrence of pivot to
-        // beginning of array and keep count using p
-        if (a[i] == v)
-        {
-            p++;
-            swap(a[p], a[i]);
-        }
-
-        // Move all same right occurrence of pivot to end of
-        // array and keep count using q
-        if (a[j] == v)
-        {
-            q--;
-            swap(a[j], a[q]);
-        }
-    }
-
-    // Move pivot element to its correct index
-    swap(a[i], a[r]);
-
-    // Move all left same occurrences from beginning
-    // to adjacent to arr[i]
-    j = i - 1;
-    for (int k = l; k < p; k++, j--)
-        swap(a[k], a[j]);
-
-    // Move all right same occurrences from end
-    // to adjacent to arr[i]
-    i = i + 1;
-    for (int k = r - 1; k > q; k--, i++)
-        swap(a[i], a[k]);
-}
-
-// 3-way partition based quick sort
 void quicksort(int a[], int l, int r)
 {
-    if (r <= l)
+    if (l >= r)
+    {
         return;
+    }
 
-    int i, j;
+    int smallPivot = a[l] <= a[r] ? a[l] : a[r];
+    int largePivot = a[l] >= a[r] ? a[l] : a[r];
+    int small = a[l] == smallPivot ? l : r;
+    int large = a[r] == largePivot ? r : l;
 
-    // Note that i and j are passed as reference
-    partition(a, l, r, i, j);
+    vector<int> less;
+    vector<int> mid;
+    vector<int> greater;
 
-    // Recur
-    quicksort(a, l, j);
-    quicksort(a, i, r);
+    for (int i = l; i <= r; i++)
+    {
+        if (a[i] < smallPivot)
+        {
+            less.push_back(a[i]);
+        }
+        else if (a[i] > smallPivot && a[i] < largePivot)
+        {
+            mid.push_back(a[i]);
+        }
+        else if (a[i] > largePivot)
+        {
+            greater.push_back(a[i]);
+        }
+        else
+        {
+            if (a[i] == smallPivot)
+            {
+                if (i < small)
+                {
+                    less.push_back(a[i]);
+                }
+                else if (i > small)
+                {
+                    mid.push_back(a[i]);
+                }
+            }
+            else
+            {
+                if (i > large)
+                {
+                    greater.push_back(a[i]);
+                }
+                else if (i < large)
+                {
+                    mid.push_back(a[i]);
+                }
+            }
+        }
+    }
+    for (int i = 0; i < less.size(); i++)
+    {
+        a[l + i] = less[i];
+    }
+    a[l + less.size()] = smallPivot;
+    for (int i = 0; i < mid.size(); i++)
+    {
+        a[l + less.size() + 1 + i] = mid[i];
+    }
+    a[r - greater.size()] = largePivot;
+    for (int i = 0; i < greater.size(); i++)
+    {
+        a[r - greater.size() + 1 + i] = greater[i];
+    }
+
+    quicksort(a, l, l + less.size() - 1);
+    quicksort(a, l + less.size() + 1, r - greater.size() - 1);
+    quicksort(a, r - greater.size() + 1, r);
+
+    return;
 }
 
 // A utility function to print an array

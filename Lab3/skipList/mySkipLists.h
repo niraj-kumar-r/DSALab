@@ -7,9 +7,9 @@ class Node_t
 private:
     int value;
     int max_level;
-    std::vector<Node_t *> next;
 
 public:
+    std::vector<Node_t *> next;
     Node_t();
     Node_t(int value);
     int getValue();
@@ -41,6 +41,7 @@ public:
     Node_t *skipSearch(int value, int final_lvl = 0);
     void skipInsert(int value);
     void remove(int value);
+    void print();
 };
 
 #endif

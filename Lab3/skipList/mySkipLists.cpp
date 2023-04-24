@@ -11,6 +11,7 @@ Node_t::Node_t()
 {
     value = 0;
     max_level = 0;
+    next = vector<Node_t *>(1, nullptr);
 }
 
 // Constructor
@@ -18,6 +19,7 @@ Node_t::Node_t(int value)
 {
     this->value = value;
     max_level = 0;
+    next = vector<Node_t *>(1, nullptr);
 }
 
 // Get value
@@ -56,7 +58,7 @@ void Node_t::setNext(Node_t *next, int level)
     if (level > this->max_level)
     {
         this->setMaxLevel(level);
-        this->next.resize(level, nullptr);
+        this->next.resize(level + 1, nullptr);
     }
     this->next[level] = next;
 }
@@ -112,17 +114,17 @@ void SkipList_t::setNumberOfNodes()
     numberOfNodes++;
 }
 
-Node_t *SkipList_t::skipSearch(int value, int final_lvl = 0)
+Node_t *SkipList_t::skipSearch(int value, int final_lvl)
 {
     Node_t *current = getNegInf();
     int current_lvl = current->getMaxLevel();
     while (current_lvl >= final_lvl)
     {
-        current_lvl--;
-        while (current->getNext(current_lvl)->getValue() < value)
+        while (current->getNext(current_lvl)->getValue() <= value)
         {
             current = current->getNext(current_lvl);
         }
+        current_lvl--;
     }
     return current;
 }
@@ -136,12 +138,12 @@ vector<Node_t *> SkipList_t::getPrevNodes(int value)
     int current_lvl = current->getMaxLevel();
     while (current_lvl >= 0)
     {
-        current_lvl--;
         while (current->getNext(current_lvl)->getValue() < value)
         {
             current = current->getNext(current_lvl);
         }
         prev_nodes[current_lvl] = current;
+        current_lvl--;
     }
     return prev_nodes;
 }
@@ -159,7 +161,7 @@ void SkipList_t::skipInsert(int value)
         if (current_lvl >= getHeight())
         {
             setHeight(getHeight() + 1);
-            prev_nodes.resize(getHeight(), neg_inf);
+            prev_nodes.resize(getHeight() + 1, neg_inf);
             pos_inf->setNext(nullptr, getHeight());
             neg_inf->setNext(pos_inf, getHeight());
         }
@@ -183,4 +185,16 @@ void SkipList_t::remove(int value)
         prev_nodes[i]->setNext(current->getNext(i), i);
     }
     delete current;
+}
+
+void SkipList_t::print()
+{
+    Node_t *current = neg_inf;
+    current = current->getNext(0);
+    while (current != pos_inf)
+    {
+        cout << current->getValue() << "-" << current->getMaxLevel() << ",";
+        current = current->getNext(0);
+    }
+    cout << endl;
 }

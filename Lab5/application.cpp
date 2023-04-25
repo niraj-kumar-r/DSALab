@@ -59,9 +59,11 @@ int main()
     }
     inputFile.close();
     int actual_bits = encoded.length() % 8;
-    int reduced_length = (n / 8) * 8;
-    rencoded = rencoded.substr(0, reduced_length) + rencoded.substr(reduced_length + 8 - actual_bits);
-
+    if (actual_bits != 0)
+    {
+        int reduced_length = (n / 8) * 8;
+        rencoded = rencoded.substr(0, reduced_length) + rencoded.substr(reduced_length + 8 - actual_bits);
+    }
     ofstream output_file("decoded.txt");
     string decoded = decode(rencoded, root);
 

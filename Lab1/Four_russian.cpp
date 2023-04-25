@@ -20,7 +20,7 @@ int lsb(int num)
   return c;
 }
 
-int b_d(vector<vector<int>> &cc, int b, int start, int n)
+int binaryToDecimal(vector<vector<int>> &cc, int b, int start, int n)
 {
   int sz = cc.size();
   int s = 0;
@@ -102,7 +102,7 @@ int main()
   {
     for (int j = 0; j < k; j++)
     {
-      int d = b_d(cy, b, j * b, i);
+      int d = binaryToDecimal(cy, b, j * b, i);
       for (int h = 0; h < n; h++)
       {
         cc[h][i] |= t[j][d][h];

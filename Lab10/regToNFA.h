@@ -25,6 +25,7 @@ public:
     std::unordered_set<NFAGraphState *> transitionFunction(NFAGraphState *currentState, std::string input);
     std::unordered_set<NFAGraphState *> epsilonClosure(NFAGraphState *currentState);
     bool isValidString(std::string);
+    std::string shortestValidString();
 };
 
 class regToNFAConvertor

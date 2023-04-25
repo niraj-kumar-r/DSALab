@@ -1,6 +1,7 @@
 #include "regToNFA.h"
 #include <iostream>
 #include <stack>
+#include <queue>
 #include <string>
 #include <algorithm>
 
@@ -69,6 +70,42 @@ bool NFAGraph::isValidString(std::string input)
         }
     }
     return false;
+}
+
+string NFAGraph::shortestValidString()
+{
+    string shortestString = "";
+    NFAGraphState *currentState = startState;
+
+    queue<pair<NFAGraphState *, string>> q;
+    q.push({currentState, ""});
+    while (!q.empty())
+    {
+        pair<NFAGraphState *, string> current = q.front();
+        q.pop();
+        currentState = current.first;
+        string currentString = current.second;
+        if (acceptingStates.find(currentState) != acceptingStates.end())
+        {
+            shortestString = currentString;
+            break;
+        }
+        for (NFAGraphState *state : currentState->edgeTransitions["@"])
+        {
+            q.push({state, currentString});
+        }
+        for (auto transition : currentState->edgeTransitions)
+        {
+            if (transition.first != "@" && transition.first != "#")
+            {
+                for (NFAGraphState *state : transition.second)
+                {
+                    q.push({state, currentString + transition.first});
+                }
+            }
+        }
+    }
+    return shortestString;
 }
 
 NFAGraph *regToNFAConvertor::getNFAforAlphabet(string alphabet)

@@ -22,7 +22,8 @@ int findAlphaQuantile(int data[], float weights[], int start, int end, float alp
     {
         return data[start];
     }
-    int pivotIndex = partition(data, weights, start, end);
+    int pivotIndex = medianOfMedians(data, start, end);
+    pivotIndex = partition(data, weights, start, end, pivotIndex);
     float currentFx = 0;
     for (int i = 0; i <= pivotIndex; i++)
     {
@@ -54,22 +55,28 @@ int findAlphaQuantile(int data[], float weights[], int start, int end, float alp
     }
 }
 
-int partition(int data[], float weights[], int left, int right)
+// returns the index of median of medians
+int medianOfMedians(int data[], int start, int end)
 {
-    int pivot = data[right];
-    int i = left;
-    for (int j = left; j < right; j++)
+    int n = end - start + 1;
+    int numGroups = n / 5;
+    int medianIndices[numGroups];
+    for (int i = 0; i < numGroups; i++)
     {
-        if (data[j] < pivot)
-        {
-            swap(data[i], data[j]);
-            swap(weights[i], weights[j]);
-            i++;
-        }
+        int groupStart = start + i * 5;
+        int groupEnd = groupStart + 4;
+        medianIndices[i] = findMedian(data, groupStart, groupEnd);
     }
-    swap(data[i], data[right]);
-    swap(weights[i], weights[right]);
-    return i;
+    int medianOfMediansIndex = findMedian(medianIndices, 0, numGroups - 1);
+    return medianOfMediansIndex;
+}
+
+// returns the index of median
+int findMedian(int data[], int start, int end)
+{
+    int n = end - start + 1;
+    sort(data + start, data + end + 1);
+    return start + n / 2;
 }
 
 int partition(int data[], float weights[], int left, int right, int pivotIndex)

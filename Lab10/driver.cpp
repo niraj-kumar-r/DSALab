@@ -20,7 +20,8 @@ int main()
         cout << "Choices: " << endl;
         cout << "1. Enter a regular expression" << endl;
         cout << "2. Check if a string is valid" << endl;
-        cout << "3. Exit\n"
+        cout << "3. Get shortest string\n";
+        cout << "4. Exit\n"
              << endl;
         cout << "Enter your choice: ";
         cout << endl;
@@ -51,6 +52,15 @@ int main()
             }
             break;
         case 3:
+            if (nfa == nullptr)
+            {
+                cout << "Please enter a regular expression first" << endl;
+                break;
+            }
+            cout << "Shortest string: " << nfa->shortestValidString() << endl;
+            break;
+
+        case 4:
             return 0;
         default:
             cout << "Invalid choice" << endl;

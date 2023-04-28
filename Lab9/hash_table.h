@@ -4,14 +4,15 @@
 constexpr unsigned short THRESHOLD = 8;
 #include "sq_table.h"
 
-class hash_table {
- public:
+class hash_table
+{
+public:
   hash_table();
   void insert(int n);
   void Delete(int n);
   void print();
 
- private:
+private:
   int hash(int n);
   void double_table();
   void halve_table();
@@ -20,4 +21,4 @@ class hash_table {
   int num_elems_;
 };
 
-#endif  // HASH_TABLE_H
+#endif // HASH_TABLE_H

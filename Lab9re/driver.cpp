@@ -13,6 +13,11 @@ using namespace std;
 int main()
 {
     HashTable ht;
+    int arr[] = {10, 20, 10, 20, 5, 86};
+    for (int i = 0; i < 6; i++)
+    {
+        ht.insertElement(arr[i]);
+    }
     int choice = 0, x, z;
     while (choice != 5)
     {

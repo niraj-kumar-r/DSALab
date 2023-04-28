@@ -8,6 +8,11 @@ using namespace std;
 InnerTable::InnerTable()
 {
     elems_.resize(1);
+    bj = 0;
+    mj = 0;
+    sj = 1;
+    a_ = rand();
+    b_ = rand();
 }
 
 int InnerTable::hash(int n)
@@ -60,47 +65,6 @@ void InnerTable::rehashInner(int elem, bool toInsert)
         }
     }
 }
-
-// void InnerTable::insertElement(int n)
-// {
-//     if (num_elems_ >= elems_.size())
-//     {
-//         elems_.resize(elems_.size() * elems_.size());
-//         rehashAll();
-//     }
-//     int index = hash(n);
-//     while (elems_[index].second)
-//     {
-//         rehashAll();
-//         index = hash(n);
-//     }
-//     elems_[index].first = n;
-//     elems_[index].second = true;
-//     num_elems_++;
-// }
-
-// void InnerTable::deleteElement(int n)
-// {
-//     int index = hash(n);
-//     elems_[index].second = false;
-//     num_elems_--;
-//     if (num_elems_ < pow(elems_.size(), 0.25))
-//     {
-//         if (pow(elems_.size(), 0.25) < MIN_THRESHOLD)
-//         {
-//             return;
-//         }
-//         elems_.resize(sqrt(elems_.size()));
-//         rehashAll();
-//     }
-// }
-
-// void InnerTable::clearTable()
-// {
-//     num_elems_ = 0;
-//     elems_.clear();
-//     fill(elems_.begin(), elems_.end(), make_pair(0, false));
-// }
 
 HashTable::HashTable()
 {
@@ -209,12 +173,6 @@ bool HashTable::findElement(int x)
 
 void HashTable::rehashAll(int elem, bool toInsert)
 {
-    // reHashAll is either called by insertElement or deleteElement
-    // for toInsert, x is the new element to be inserted
-    // for deleteElement(x), x is -1 and toInsert is false
-
-    // append all elements to a vector
-
     vector<int> old_elems;
     for (int i = 0; i < buckets_.size(); i++)
     {
@@ -229,7 +187,14 @@ void HashTable::rehashAll(int elem, bool toInsert)
     }
     if (toInsert)
     {
-        old_elems.push_back(elem);
+        if ((find(old_elems.begin(), old_elems.end(), elem) == old_elems.end()))
+        {
+            old_elems.push_back(elem);
+        }
+        else
+        {
+            cout << "Element " << elem << " already exists" << endl;
+        }
     }
 
     count = old_elems.size();
@@ -294,7 +259,7 @@ bool HashTable::starStarSatisfied()
     {
         sj_sum += buckets_[i].sj;
     }
-    return (sj_sum <= (32 * pow(M, 2) / buckets_.size()) + 4 * M);
+    return (sj_sum <= (32 * pow(M, 2) / sM) + 4 * M);
 }
 
 void HashTable::print()

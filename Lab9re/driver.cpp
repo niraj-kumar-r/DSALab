@@ -3,21 +3,9 @@
 
 using namespace std;
 
-// write a menu driven program to
-// 1. insert an element
-// 2. delete an element
-// 3. find an element
-// 4. print the hash table
-// 5. exit
-
 int main()
 {
     HashTable ht;
-    int arr[] = {10, 20, 10, 20, 5, 86};
-    for (int i = 0; i < 6; i++)
-    {
-        ht.insertElement(arr[i]);
-    }
     int choice = 0, x, z;
     while (choice != 5)
     {

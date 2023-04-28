@@ -12,11 +12,11 @@ constexpr unsigned int PRIME = 19937;
 class InnerTable
 {
 public:
-    // InnerTable();
+    InnerTable();
     // void insertElement(int n);
     // void deleteElement(int n);
     // void clearTable();
-    int num_elems_;
+    // int num_elems_;
     std::vector<std::pair<int, bool>> elems_;
     // bool can be set to false to delete an element, that is
     // use as valid bit
@@ -49,6 +49,7 @@ private:
     int a_main_, b_main_;
     int num_elems_;
     int M;
+    int sM;
     int count;
 };
 

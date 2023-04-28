@@ -5,6 +5,11 @@
 
 using namespace std;
 
+InnerTable::InnerTable()
+{
+    elems_.resize(1);
+}
+
 int InnerTable::hash(int n)
 {
     return ((a_ * n + b_) % PRIME) % elems_.size();
@@ -99,6 +104,7 @@ void InnerTable::rehashInner(int elem, bool toInsert)
 
 HashTable::HashTable()
 {
+    buckets_.resize(1);
     rehashAll(-1);
 }
 
@@ -128,6 +134,7 @@ void HashTable::insertElement(int x)
             if (!buckets_[index].elems_[buckets_[index].hash(x)].second)
             {
                 buckets_[index].elems_[buckets_[index].hash(x)].second = true;
+                num_elems_++;
                 cout << "Element " << x << " inserted in " << index << " bucket " << buckets_[index].hash(x) << " index" << endl;
             }
             else
@@ -138,6 +145,7 @@ void HashTable::insertElement(int x)
         else
         {
             buckets_[index].bj++;
+            num_elems_++;
             if (buckets_[index].bj <= buckets_[index].mj)
             {
                 if (!buckets_[index].elems_[buckets_[index].hash(x)].second)
@@ -154,7 +162,7 @@ void HashTable::insertElement(int x)
             {
                 buckets_[index].mj = 2 * max(1, buckets_[index].mj);
                 buckets_[index].sj = 2 * buckets_[index].mj * (buckets_[index].mj - 1);
-                if (starStarSatisfied)
+                if (starStarSatisfied())
                 {
                     buckets_[index].rehashInner(x, true);
                 }
@@ -225,13 +233,19 @@ void HashTable::rehashAll(int elem, bool toInsert)
     }
 
     count = old_elems.size();
+    num_elems_ = old_elems.size();
     M = (1 + c_global) * max(MIN_THRESHOLD, count);
+    sM = max(1, 2 * (num_elems_ - 1));
+    buckets_.resize(sM);
 
     vector<vector<int>> new_distribution(buckets_.size());
     do
     {
         setNewHash();
-        new_distribution.clear();
+        for (auto &v : new_distribution)
+        {
+            v.clear();
+        }
         for (int i = 0; i < old_elems.size(); i++)
         {
             int index = hash_main(old_elems[i]);
@@ -241,14 +255,14 @@ void HashTable::rehashAll(int elem, bool toInsert)
         {
             buckets_[j].bj = new_distribution[j].size();
             buckets_[j].mj = 2 * buckets_[j].bj;
-            buckets_[j].sj = 2 * buckets_[j].mj * (buckets_[j].mj - 1);
+            buckets_[j].sj = max(1, 2 * buckets_[j].mj * (buckets_[j].mj - 1));
         }
 
     } while (!starStarSatisfied());
 
     for (int i = 0; i < buckets_.size(); i++)
     {
-        buckets_[i].elems_.resize(buckets_[i].mj);
+        buckets_[i].elems_.resize(buckets_[i].sj);
         fill(buckets_[i].elems_.begin(), buckets_[i].elems_.end(), make_pair(0, false));
         bool rehash = true;
         while (rehash)
@@ -281,4 +295,22 @@ bool HashTable::starStarSatisfied()
         sj_sum += buckets_[i].sj;
     }
     return (sj_sum <= (32 * pow(M, 2) / buckets_.size()) + 4 * M);
+}
+
+void HashTable::print()
+{
+    for (int i = 0; i < buckets_.size(); i++)
+    {
+        cout << "\nBucket " << i << ": ";
+        for (int j = 0; j < buckets_[i].elems_.size(); j++)
+        {
+            cout << "\nSlot " << j << " : ";
+            if (buckets_[i].elems_[j].second)
+            {
+                cout << buckets_[i].elems_[j].first << "";
+            }
+        }
+        cout << "\n\n";
+    }
+    cout << endl;
 }

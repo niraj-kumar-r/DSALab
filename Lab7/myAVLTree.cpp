@@ -87,8 +87,6 @@ avlTreeNode_t *myAVLTree::insert(avlTreeNode_t *node, Point P)
     else
     {
         return node;
-
-        // this will makw it so that the later code never runs fix this
     }
 
     node->height = 1 + std::max(height(node->left),

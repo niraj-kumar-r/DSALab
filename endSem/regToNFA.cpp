@@ -108,6 +108,66 @@ string NFAGraph::shortestValidString()
     return shortestString;
 }
 
+string NFAGraph::shortestStringLongestPrefix(string str)
+{
+    // returns the shortest string in the language
+    // with the longest possible prefix match with str
+
+    for (int l = str.size(); l > 0; l--)
+    {
+        string prefixToMatch = str.substr(0, l);
+        unordered_set<NFAGraphState *> currentStates = epsilonClosure(startState);
+
+        for (int i = 0; i < prefixToMatch.length(); i++)
+        {
+            unordered_set<NFAGraphState *> nextStates = {};
+            for (NFAGraphState *state : currentStates)
+            {
+                unordered_set<NFAGraphState *> temp = transitionFunction(state, prefixToMatch.substr(i, 1));
+                for (NFAGraphState *state2 : temp)
+                {
+                    unordered_set<NFAGraphState *> temp2 = epsilonClosure(state2);
+                    nextStates.insert(temp2.begin(), temp2.end());
+                }
+            }
+            currentStates = nextStates;
+        }
+
+        queue<pair<NFAGraphState *, string>> q;
+        for (NFAGraphState *state : currentStates)
+        {
+            q.push({state, prefixToMatch});
+        }
+        NFAGraphState *currentState = nullptr;
+        while (!q.empty())
+        {
+            pair<NFAGraphState *, string> current = q.front();
+            q.pop();
+            currentState = current.first;
+            string currentString = current.second;
+            if (acceptingStates.find(currentState) != acceptingStates.end())
+            {
+                return currentString;
+            }
+            for (NFAGraphState *state : currentState->edgeTransitions["@"])
+            {
+                q.push({state, currentString});
+            }
+            for (auto transition : currentState->edgeTransitions)
+            {
+                if (transition.first != "@")
+                {
+                    for (NFAGraphState *state : transition.second)
+                    {
+                        q.push({state, currentString + transition.first});
+                    }
+                }
+            }
+        }
+    }
+    return shortestValidString();
+}
+
 NFAGraph *regToNFAConvertor::getNFAforAlphabet(string alphabet)
 {
     NFAGraph *nfa = new NFAGraph();
@@ -156,7 +216,6 @@ NFAGraph *regToNFAConvertor::getUnion(NFAGraph *nfa1, NFAGraph *nfa2)
 
     nfa->acceptingStates = nfa1->acceptingStates;
     nfa->acceptingStates.insert(nfa2->acceptingStates.begin(), nfa2->acceptingStates.end());
-
     delete nfa1;
     delete nfa2;
     return nfa;
